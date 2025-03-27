@@ -4,7 +4,7 @@ import create from "../../assets/routerImg/create.png";
 import settings from "../../assets/routerImg/settings.png";
 import subscription from "../../assets/routerImg/subscription.png";
 import user from "../../assets/routerImg/user.png";
-import logo from "../../assets/header/logo.png";
+import logo from "../../assets/logo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
@@ -25,9 +25,6 @@ const items = [
     icon: user,
     link: "/dashboard/UserManagement",
   },
-
-  
-  
   {
     key: "categoriesManagement",
     label: "Categories Management",
@@ -138,7 +135,7 @@ const SidBar = () => {
   };
 
   return (
-    <div className="custom-sidebar h-[100vh] bg-[#120c66]">
+    <div className="custom-sidebar h-[100vh] bg-[#495F48]">
       
       <div className="custom-sidebar-logo flex justify-center">
         <img src={logo} alt="Logo" className="w-[160px]" />
@@ -161,10 +158,10 @@ const SidBar = () => {
             <div key={item.key}>
               <Link
                 to={item.link}
-                className={`menu-item my-4 mx-5 py-3 px-3 flex items-center cursor-pointer ${
+                className={`menu-item my-4 mr-3 py-3 px-3 flex items-center cursor-pointer ${
                   selectedKey === item.key || isSettingsActive || isCreatorActive || isCategoriesActive
-                    ? "bg-[#bb3538] text-white rounded-md"
-                    : "bg-white rounded-md hover:bg-gray-200"
+                    ? "bg-[#707666] rounded-tr rounded-br text-white "
+                    : "bg-white  hover:bg-gray-200"
                 }`}
                 onClick={(e) => {
                   if (item.children) {
@@ -191,7 +188,7 @@ const SidBar = () => {
               {/* Show children menu if expanded */}
               {item.children && (
                 <div
-                  className={`children-menu bg-white -my-2 mx-5 transition-all duration-300 ${
+                  className={`children-menu bg-white -my-2 mr-3 transition-all duration-300 ${
                     expandedKeys.includes(item.key) ? "expanded" : ""
                   }`}
                   style={{
@@ -226,10 +223,10 @@ const SidBar = () => {
       </div>
 
       {/* Logout Button */}
-      <div className="  w-full p-4 px-5">
+      <div className="  w-full pt-5 pr-3">
         <button
           onClick={handleLogout}
-          className="w-full flex bg-[#fa16ef] text-white text-start rounded-md  p-3"
+          className="w-full flex bg-[#fa16ef] text-white text-start   p-3"
         >
           <span className="text-2xl">
             <IoIosLogIn />
