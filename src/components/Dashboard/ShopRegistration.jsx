@@ -21,7 +21,7 @@ const ShopRegistration = () => {
             accountNumber: "6575675678676",
             branchCode: "4575467",
             branchCity: "New York",
-            city:"Us",
+            location:"Us",
             image: "https://via.placeholder.com/40" 
         }
     ];
@@ -44,33 +44,20 @@ const ShopRegistration = () => {
             ),
         },
         {
-            title: "phone",
-            dataIndex: "phone",
-            key: "phone",
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
         },
         {
-            title: "city",
-            dataIndex: "city",
-            key: "city",
+            title: "Location",
+            dataIndex: "location",
+            key: "location",
         },
-        {
-            title: "Shop Category",
-            dataIndex: "category",
-            key: "category",
-        },
+       
+        
         {
             title: "Action",
             key: "action",
-            render: () => (
-                <div className="flex space-x-2">
-                    <button type="primary" className="bg-[#D9F2DD] text-[#359742] rounded-full py-1 px-5">Accept</button>
-                    <button className="bg-[#FFE5E5] text-[#E8002A] rounded-full py-1 px-5" type="primary" danger>Decline</button>
-                </div>
-            ),
-        },
-        {
-            title: "View Details",
-            key: "viewDetails",
             render: (record) => (
                 <Button onClick={() => { setSelectedShop(record); setOpen(true); }} shape="circle" icon={<EyeOutlined />} style={{ backgroundColor: "#016A70", color: "white" }} />
             ),

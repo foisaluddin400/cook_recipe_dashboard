@@ -50,6 +50,12 @@ const items = [
     link: "/dashboard/Subscription",
   },
   {
+    key: "adPromotional",
+    label: "Ad Promotional",
+    icon: subscription,
+    link: "/dashboard/adPromotion",
+  },
+  {
     key: "settings",
     label: "Settings",
     icon: settings,

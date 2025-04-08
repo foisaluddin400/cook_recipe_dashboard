@@ -4,7 +4,7 @@ import Dashboard from "../components/Dashboard/Dashboard";
 import UserManagement from "../page/UserManagement/UserManagement";
 import CreatorManagement from "../page/CreatorManagement/CreatorManagement";
 
-import Subscription from "../page/Subscription/Subscription";
+
 
 import Profile from "../page/Settings/Profile";
 import TermsCondition from "../page/Settings/TermsCondition";
@@ -19,6 +19,8 @@ import ResetPass from "../Auth/ResetPass";
 import Notification from "../page/Notification/Notification";
 import About from "../page/Settings/About";
 import Login from "../Auth/Login";
+import Subscription from "../page/Subscription/Subscription";
+import AdPromotional from "../page/adpromotion/AdPromotional";
 
 
 export const router = createBrowserRouter([
@@ -45,6 +47,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/CategoriesManagement/Categories",
         element: <Categories></Categories>,
+      },
+      {
+        path: "/dashboard/adPromotion",
+        element: <AdPromotional></AdPromotional>
       },
       {
         path: "/dashboard/CategoriesManagement/Categories",

@@ -48,7 +48,7 @@ const UserGrowth = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="uv" stackId="a" fill="#AB684D" radius={[25, 25, 0, 0]} />
+              <Bar dataKey="uv" stackId="a" fill="#495F48" radius={[25, 25, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

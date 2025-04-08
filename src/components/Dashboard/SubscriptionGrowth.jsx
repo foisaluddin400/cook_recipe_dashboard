@@ -88,8 +88,8 @@ export const SubscriptionGrowth = () => {
           <Area
             type="monotone"
             dataKey="value"
-            stroke="#AB684D"
-            fill="#AB684D"
+            stroke="#495F48"
+            fill="#495F48"
           />
         </AreaChart>
       </ResponsiveContainer>

@@ -1,4 +1,4 @@
-import { Table, Input, Space, Spin, message } from "antd";
+import { Table, Input, Space, Spin, message, Modal } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { MdBlockFlipped } from "react-icons/md";
 import { useState } from "react";
@@ -8,8 +8,8 @@ import { FaRegEye } from "react-icons/fa";
 
 const UserManagement = () => {
   const [loadingId, setLoadingId] = useState(null);
-
-
+  const [selectedShop, setSelectedShop] = useState(null);
+  const [open, setOpen] = useState(false);
   // Static mock data (replace this with actual data if needed)
   const userManagement = {
     users: [
@@ -80,7 +80,7 @@ const UserManagement = () => {
       render: (_, record) => (
         <Space size="middle">
             <button
-            // onClick={() => handleBlockUnblock(record)}
+            onClick={() => { setSelectedShop(record); setOpen(true); }}
             className={"bg-[#495F48] text-white w-[30px] h-[30px] flex justify-center text-xl items-center rounded-md"}
           
           >
@@ -125,6 +125,27 @@ const UserManagement = () => {
       </div>
 
       <Table columns={columns} dataSource={userData} pagination={false} />
+
+      <Modal
+                title="Shop Details"
+                centered
+                open={open}
+                onOk={() => setOpen(false)}
+                onCancel={() => setOpen(false)}
+                width={500}
+            >
+                {selectedShop && (
+                    <div>
+                        <p><strong>Name:</strong> {selectedShop.userName}</p>
+                        <p><strong>Shop Address:</strong> {selectedShop.address}</p>
+                
+                       
+                        <p><strong>Email:</strong> {selectedShop.email}</p>
+
+
+                    </div>
+                )}
+            </Modal>
     </div>
   );
 };
