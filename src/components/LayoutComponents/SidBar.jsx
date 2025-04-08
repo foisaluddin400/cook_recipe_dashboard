@@ -56,6 +56,18 @@ const items = [
     link: "/dashboard/adPromotion",
   },
   {
+    key: "transaction",
+    label: "Transaction",
+    icon: subscription,
+    link: "/dashboard/transaction",
+  },
+  {
+    key: "support",
+    label: "Contact Support",
+    icon: subscription,
+    link: "/dashboard/support",
+  },
+  {
     key: "settings",
     label: "Settings",
     icon: settings,
@@ -81,11 +93,7 @@ const items = [
         label: "FAQ",
         link: "/dashboard/Settings/FAQ",
       },
-      {
-        key: "about",
-        label: "About Us",
-        link: "/dashboard/Settings/aboutUs",
-      },
+      
     ],
   },
 ];

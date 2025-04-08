@@ -17,10 +17,12 @@ import ForgetPass from "../Auth/ForgetPass";
 import Verify from "../Auth/Verify";
 import ResetPass from "../Auth/ResetPass";
 import Notification from "../page/Notification/Notification";
-import About from "../page/Settings/About";
+
 import Login from "../Auth/Login";
 import Subscription from "../page/Subscription/Subscription";
 import AdPromotional from "../page/adpromotion/AdPromotional";
+import Support from "../page/contactSupport/Support";
+import Transaction from "../page/transaction/Transaction";
 
 
 export const router = createBrowserRouter([
@@ -57,6 +59,14 @@ export const router = createBrowserRouter([
         element: <Categories></Categories>,
       },
       {
+        path: "/dashboard/support",
+        element: <Support></Support>,
+      },
+      {
+        path: "/dashboard/transaction",
+        element: <Transaction></Transaction>
+      },
+      {
         path: "/dashboard/CategoriesManagement/Subcategory",
         element: <Subcategory></Subcategory>,
       },
@@ -84,10 +94,7 @@ export const router = createBrowserRouter([
         path: "/dashboard/Settings/FAQ",
         element: <FAQ></FAQ>,
       },
-      {
-        path: "/dashboard/Settings/aboutUs",
-        element: <About></About>,
-      },
+   
       {
         path: "/dashboard/Settings/PrivacyPolicy",
         element: <PrivacyPolicy></PrivacyPolicy>,

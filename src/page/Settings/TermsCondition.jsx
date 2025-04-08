@@ -2,6 +2,7 @@ import  { useState, useRef, } from 'react';
 import JoditEditor from 'jodit-react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import  Navigate  from '../../Navigate';
 
 
 const TermsCondition = () => {
@@ -27,19 +28,8 @@ const TermsCondition = () => {
   }
 
   return (
-    <div className=" mx-auto ">
-      <div className="flex justify-between mb-7 mt-4">
-      <h1 className="flex gap-4">
-          <button
-            className="text-[#EF4849] "
-            onClick={() => navigate(-1)} 
-          >
-            <FaArrowLeft />
-          </button>
-          <span className="text-lg font-semibold">Terms & Condition</span>
-        </h1>
-        
-      </div>
+    <div className="p-1 ">
+      <Navigate title={'Terms & Condition'}></Navigate>
 
       <JoditEditor
         ref={editor}
