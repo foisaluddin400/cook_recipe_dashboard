@@ -44,6 +44,12 @@ const items = [
     ],
   },
   {
+    key: "recipe",
+    label: "Recipe",
+    icon: subscription,
+    link: "/dashboard/recipe",
+  },
+  {
     key: "subscription",
     label: "Subscription",
     icon: subscription,

@@ -23,6 +23,8 @@ import Subscription from "../page/Subscription/Subscription";
 import AdPromotional from "../page/adpromotion/AdPromotional";
 import Support from "../page/contactSupport/Support";
 import Transaction from "../page/transaction/Transaction";
+import Recipe from "../page/Recipe/Recipe";
+import AddRecipe from "../page/Recipe/AddRecipe";
 
 
 export const router = createBrowserRouter([
@@ -49,6 +51,14 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/CategoriesManagement/Categories",
         element: <Categories></Categories>,
+      },
+      {
+        path: "/dashboard/recipe",
+        element: <Recipe></Recipe>
+      },
+      {
+        path: "/dashboard/recipe/addRecipe",
+        element: <AddRecipe></AddRecipe>
       },
       {
         path: "/dashboard/adPromotion",
