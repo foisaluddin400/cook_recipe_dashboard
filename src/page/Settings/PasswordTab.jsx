@@ -93,7 +93,7 @@ export const PasswordTab = () => {
 
       <Form.Item>
       <div className="flex justify-center">
-           <button className="bg-[#9C5F46] text-white py-2 px-5" type="submit" htmlType="submit" block>
+           <button className="bg-[#495F48] text-white py-2 px-5" type="submit" htmlType="submit" block>
               Update
             </button>
            </div>

@@ -50,15 +50,15 @@ const Recipe = () => {
    <div className='h-screen p-1'>
      <div className="flex justify-between">
           <div className="flex ">
-            <Navigate title={"Customers"}></Navigate>
-            <h1 className=" pl-2 font-semibold text-xl">{`(110)`}</h1>
+            <Navigate title={"Recipe"}></Navigate>
+        
           </div>
           <div>
             <Link to={'/dashboard/recipe/addRecipe'}><button
             className="bg-[#495F48] px-5 py-2 text-white rounded"
             // onClick={() => setOpenAddModal(true)}
           >
-            + Subscription
+            + Add Recipe
           </button></Link>
           </div>
         </div>
@@ -79,7 +79,7 @@ const Recipe = () => {
                 <FaClock /> {item.time}
               </div>
               <div className="flex gap-2 text-gray-600">
-                <FiEdit2 className="cursor-pointer hover:text-blue-500" />
+                <Link to={'/dashboard/recipe/editRecipe'}><FiEdit2 className="cursor-pointer hover:text-blue-500" /></Link>
                 <FiTrash className="cursor-pointer hover:text-red-500" />
               </div>
             </div>

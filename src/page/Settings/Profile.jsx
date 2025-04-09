@@ -81,7 +81,7 @@ const Profile = () => {
 
           <Form.Item>
            <div className="flex justify-center">
-           <button className="bg-[#9C5F46] text-white py-2 px-5" type="submit" htmlType="submit" block>
+           <button className="bg-[#495F48] text-white py-2 px-5" type="submit" htmlType="submit" block>
               Save Changes
             </button>
            </div>
@@ -142,7 +142,7 @@ const Profile = () => {
               key={item.key}
               className={`py-2 font-medium ${
                 activeTab === item.key
-                  ? "border-b border-[#9C5F46] text-[#9C5F46]"
+                  ? "border-b border-[#495F48] text-[#495F48]"
                   : "text-black hover:text-[#02111E]"
               }`}
               onClick={() => setActiveTab(item.key)}

@@ -114,7 +114,7 @@ const UserManagement = () => {
   ];
 
   return (
-    <div className="h-screen bg-white p-3">
+    <div className="h-screen  p-1">
       <div className="flex justify-between">
         <Navigate title={"User Managements"} />
         <Input

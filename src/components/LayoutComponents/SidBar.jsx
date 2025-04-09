@@ -25,24 +25,7 @@ const items = [
     icon: user,
     link: "/dashboard/UserManagement",
   },
-  {
-    key: "categoriesManagement",
-    label: "Categories Management",
-    icon: categorie,
-    link: "/dashboard/CategoriesManagement/Categories",
-    children: [
-      {
-        key: "categories",
-        label: "Categories",
-        link: "/dashboard/CategoriesManagement/Categories",
-      },
-      {
-        key: "subcategory",
-        label: "Subcategory",
-        link: "/dashboard/CategoriesManagement/Subcategory",
-      },
-    ],
-  },
+ 
   {
     key: "recipe",
     label: "Recipe",
@@ -224,7 +207,7 @@ const SidBar = () => {
                       to={child.link}
                       className={`menu-item p-4 flex items-center cursor-pointer ${
                         selectedKey === child.key
-                          ? "bg-[#bb3538] text-white"
+                          ? "bg-[#707666] text-white"
                           : "hover:bg-gray-200"
                       }`}
                       onClick={() => {
@@ -246,7 +229,7 @@ const SidBar = () => {
       <div className="  w-full pt-5 pr-3">
         <button
           onClick={handleLogout}
-          className="w-full flex bg-[#fa16ef] text-white text-start   p-3"
+          className="w-full flex bg-white text-red-500 text-start   p-3"
         >
           <span className="text-2xl">
             <IoIosLogIn />

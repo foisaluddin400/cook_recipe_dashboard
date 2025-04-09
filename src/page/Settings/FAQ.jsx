@@ -26,7 +26,7 @@ const FAQ = () => {
   };
 
   return (
-    <div className=" p-1">
+    <div className=" p-1 h-screen">
       <Navigate title={'FAQ'}></Navigate>
 
       <div className="grid grid-cols-2 gap-5 mt-2">
@@ -51,7 +51,7 @@ const FAQ = () => {
       </div>
 
       <div className="flex items-center justify-center mt-20">
-        <button className='px-5 py-2 bg-[#9C5F46] text-white rounded' onClick={() => setIsModalOpen(true)} type="submit" > + Add FAQ </button>
+        <button className='px-5 py-2 bg-[#495F48] text-white rounded' onClick={() => setIsModalOpen(true)} type="submit" > + Add FAQ </button>
       </div>
 
       <Modal centered open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)}>
@@ -64,7 +64,7 @@ const FAQ = () => {
             <TextArea rows={4} placeholder="Type answer here..." />
           </Form.Item>
           <div className="flex items-center justify-center mt-2">
-            <Button type="primary" shape="round" size="large" style={{ background: "black", borderColor: "#2F799E" }}> Save </Button>
+            <Button type="primary" shape="round" size="large" style={{ background: "black", borderColor: "#495F48" }}> Save </Button>
           </div>
         </Form>
       </Modal>
@@ -79,7 +79,7 @@ const FAQ = () => {
             <TextArea rows={4} placeholder="Type answer here..." />
           </Form.Item>
           <div className="flex items-center justify-center mt-2">
-            <Button type="primary" shape="round" size="large" style={{ background: "black", borderColor: "#2F799E" }}> Save </Button>
+            <Button type="primary" shape="round" size="large" style={{ background: "black", borderColor: "#495F48" }}> Save </Button>
           </div>
         </Form>
       </Modal>

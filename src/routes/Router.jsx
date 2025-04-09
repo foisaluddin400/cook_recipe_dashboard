@@ -2,16 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 import DashboardLayout from "../layout/dashboardLayout/DashboardLayout";
 import Dashboard from "../components/Dashboard/Dashboard";
 import UserManagement from "../page/UserManagement/UserManagement";
-import CreatorManagement from "../page/CreatorManagement/CreatorManagement";
-
-
 
 import Profile from "../page/Settings/Profile";
 import TermsCondition from "../page/Settings/TermsCondition";
 import FAQ from "../page/Settings/FAQ";
 import PrivacyPolicy from "../page/Settings/PrivacyPolicy";
-import Categories from "../page/CategoriesManagement/Categories";
-import Subcategory from "../page/CategoriesManagement/Subcategory";
+
+
 
 import ForgetPass from "../Auth/ForgetPass";
 import Verify from "../Auth/Verify";
@@ -25,6 +22,7 @@ import Support from "../page/contactSupport/Support";
 import Transaction from "../page/transaction/Transaction";
 import Recipe from "../page/Recipe/Recipe";
 import AddRecipe from "../page/Recipe/AddRecipe";
+import EditRecipe from "../page/Recipe/EditRecipe";
 
 
 export const router = createBrowserRouter([
@@ -44,14 +42,8 @@ export const router = createBrowserRouter([
         path: "/dashboard/UserManagement",
         element: <UserManagement></UserManagement>,
       },
-      {
-        path: "/dashboard/CreatorManagement",
-        element: <CreatorManagement></CreatorManagement>,
-      },
-      {
-        path: "/dashboard/CategoriesManagement/Categories",
-        element: <Categories></Categories>,
-      },
+     
+     
       {
         path: "/dashboard/recipe",
         element: <Recipe></Recipe>
@@ -61,13 +53,14 @@ export const router = createBrowserRouter([
         element: <AddRecipe></AddRecipe>
       },
       {
+        path: "/dashboard/recipe/editRecipe",
+        element: <EditRecipe></EditRecipe>
+      },
+      {
         path: "/dashboard/adPromotion",
         element: <AdPromotional></AdPromotional>
       },
-      {
-        path: "/dashboard/CategoriesManagement/Categories",
-        element: <Categories></Categories>,
-      },
+    
       {
         path: "/dashboard/support",
         element: <Support></Support>,
@@ -76,10 +69,7 @@ export const router = createBrowserRouter([
         path: "/dashboard/transaction",
         element: <Transaction></Transaction>
       },
-      {
-        path: "/dashboard/CategoriesManagement/Subcategory",
-        element: <Subcategory></Subcategory>,
-      },
+     
       {
         path: "/dashboard/Subscription",
         element: <Subscription></Subscription>,

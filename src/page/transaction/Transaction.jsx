@@ -164,10 +164,10 @@ const Transaction = () => {
   ];
 
   return (
-    <div className="p-1">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center">
-          <Navigate title={"Premium Subscribers"} />
+    <div className="p-1 h-screen">
+      <div className="flex justify-between ">
+        <div className="flex ">
+          <Navigate title={"Transaction"} />
           
         </div>
         <Input

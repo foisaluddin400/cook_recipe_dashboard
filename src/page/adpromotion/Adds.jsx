@@ -45,7 +45,7 @@ const Adds = ({setEditModal}) => {
             <button
               onClick={() => setEditModal(true)}
               
-              className="bg-[#D17C51] p-2 rounded text-xl text-white"
+              className="bg-[#495F48] p-2 rounded text-xl text-white"
              
             ><FiEdit2 /></button>
         
@@ -86,7 +86,7 @@ const Adds = ({setEditModal}) => {
   ];
 
   return (
-    <div className="p-4">
+    <div className="p-3">
       <Table
         columns={columns}
         dataSource={data}

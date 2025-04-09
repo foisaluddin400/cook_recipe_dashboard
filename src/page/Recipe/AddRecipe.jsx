@@ -67,7 +67,7 @@ const AddRecipe = () => {
 
   return (
     <div className="p-1">
-        <Navigate title={"Customers"}></Navigate>
+        <Navigate title={"Add Recipe"}></Navigate>
         <div id="recipe" className="p-5 mt-4 bg-white h-screen">
       <Form
         form={form}
@@ -116,8 +116,28 @@ const AddRecipe = () => {
                       label: "Meal Type",
                     },
                     {
-                      value: "lucy",
+                      value: "lucyg",
                       label: "Breakfast",
+                    },
+                    {
+                      value: "lucyg",
+                      label: "Lunch",
+                    },
+                    {
+                      value: "lucyuj",
+                      label: "Dinner",
+                    },
+                    {
+                      value: "l",
+                      label: "Appetizers",
+                    },
+                    {
+                      value: "lu",
+                      label: "Sides",
+                    },
+                    {
+                      value: "luc",
+                      label: "Soup",
                     },
                   ]}
                 />
@@ -125,65 +145,92 @@ const AddRecipe = () => {
             </Form.Item>
 
             <Form.Item
-              label="Meal Type"
-              name="mealType"
+              label="Weight Loss vs.MuscleGain"
+              name="Weight"
               rules={[
-                { required: true, message: "Please input your meal type" },
+                { required: true, message: "Please input Weight Loss vs.MuscleGain" },
               ]}
             >
+               <ConfigProvider
+                theme={{
+                  components: {
+                    Select: {
+                      
+                      borderRadius: 0,
+                      lineHeight:2
+                     
+                    },
+                  },
+                }}
+              >
               <Select
                 labelInValue
-                defaultValue={{ value: "lucy", label: "Lucy (101)" }}
+                defaultValue={{ value: "Weight Loss vs.MuscleGain", label: "Weight Loss vs.MuscleGain" }}
                 options={[
                   {
                     value: "jack",
-                    label: "Jack (100)",
+                    label: "Weight Loss vs.MuscleGain",
                   },
                   {
                     value: "lucy",
-                    label: "Lucy (101)",
+                    label: "Weight Loss",
+                  },
+                  {
+                    value: "lucdy",
+                    label: "Muscle Gain",
                   },
                 ]}
-              />
+              /> </ConfigProvider>
             </Form.Item>
 
             <Form.Item
-              label="Username"
-              name="username"
+              label="Serving Size"
+              name="serving"
               rules={[
-                { required: true, message: "Please input your username!" },
+                { required: true, message: "Please input Serving Size" },
               ]}
             >
               <Input style={{ borderRadius: "0px", padding: "6px 8px" }} />
             </Form.Item>
 
             <Form.Item
-              label="Meal Type"
+              label="Flavour Type"
               name="mealType"
               rules={[
-                { required: true, message: "Please input your meal type" },
+                { required: true, message: "Please input Flavor Type" },
               ]}
             >
+               <ConfigProvider
+                theme={{
+                  components: {
+                    Select: {
+                      activeBorderColor: "rgb(250,59,59)",
+                      borderRadius: 0,
+                     
+                    },
+                  },
+                }}
+              >
               <Select
                 labelInValue
-                defaultValue={{ value: "lucy", label: "Lucy (101)" }}
+                defaultValue={{ value: "Flavor Type", label: "Flavor Type" }}
                 options={[
                   {
                     value: "jack",
-                    label: "Jack (100)",
+                    label: "Sweet",
                   },
                   {
                     value: "lucy",
-                    label: "Lucy (101)",
+                    label: "Savory",
                   },
                 ]}
-              />
+              /> </ConfigProvider>
             </Form.Item>
             <Form.Item
-              label="Username"
-              name="username"
+              label="Prep"
+              name="prep"
               rules={[
-                { required: true, message: "Please input your username!" },
+                { required: true, message: "Please input Prep" },
               ]}
             >
               <Input.TextArea
@@ -193,31 +240,51 @@ const AddRecipe = () => {
           </div>
           <div>
             <Form.Item
-              label="Meal Type"
+              label="Ethnic/Holiday Recipes"
               name="mealType"
               rules={[
-                { required: true, message: "Please input your meal type" },
+                { required: true, message: "Please input Ethnic/Holiday Recipes" },
               ]}
             >
+               <ConfigProvider
+                theme={{
+                  components: {
+                    Select: {
+                      activeBorderColor: "rgb(250,59,59)",
+                      borderRadius: 0,
+                     
+                    },
+                  },
+                }}
+              >
               <Select
                 labelInValue
-                defaultValue={{ value: "lucy", label: "Lucy (101)" }}
+                defaultValue={{ value: "Ethnic/Holiday Recipes", label: "Ethnic/Holiday Recipes" }}
                 options={[
                   {
                     value: "jack",
-                    label: "Jack (100)",
+                    label: "Arabic",
                   },
                   {
                     value: "lucy",
-                    label: "Lucy (101)",
+                    label: "Backyard BBQ",
+                  },
+                  {
+                    value: "ddlucy",
+                    label: "Christmas",
+                  },
+                  {
+                    value: "ldfucy",
+                    label: "French",
                   },
                 ]}
-              />
+              /> </ConfigProvider>
             </Form.Item>
 
             <Form.List name="cooking">
               {(fields, { add, remove }) => (
                 <>
+                <div className="pb-2">Cooking Instruction</div>
                   {fields.map((field, index) => (
                     <div
                       key={field.key}
@@ -228,14 +295,15 @@ const AddRecipe = () => {
                       <Form.Item
                         className="w-full col-span-11"
                         {...field}
-                        label={`Item ${index + 1}`}
+                        
                         name={[field.name]}
                         rules={[
                           { required: true, message: "Please input an item!" },
                         ]}
                       >
                         <Input
-                          placeholder="Enter item"
+                          
+                          defaultValue={index + 1}
                           style={{ borderRadius: "0px", padding: "6px 8px" }}
                         />
                       </Form.Item>
@@ -268,6 +336,7 @@ const AddRecipe = () => {
             <Form.List name="ingredients">
               {(fields, { add, remove }) => (
                 <>
+                <div className="pb-2">Ingredients List</div>
                   {fields.map((field, index) => (
                     <div
                       key={field.key}
@@ -278,7 +347,7 @@ const AddRecipe = () => {
                       <Form.Item
                         className="w-full col-span-11"
                         {...field}
-                        label={`Item ${index + 1}`}
+                        
                         name={[field.name]}
                         rules={[
                           { required: true, message: "Please input an item!" },
@@ -318,6 +387,7 @@ const AddRecipe = () => {
             <Form.List name="nutrition">
               {(fields, { add, remove }) => (
                 <>
+                <div className="pb-2">Nutritional Information Per Serving</div>
                   {fields.map((field, index) => (
                     <div
                       key={field.key}
@@ -328,7 +398,7 @@ const AddRecipe = () => {
                       <Form.Item
                         className="w-full col-span-11"
                         {...field}
-                        label={`Item ${index + 1}`}
+                        
                         name={[field.name]}
                         rules={[
                           { required: true, message: "Please input an item!" },
@@ -381,6 +451,17 @@ const AddRecipe = () => {
               name="oils"
               rules={[{ required: true, message: "Please input your Oils" }]}
             >
+               <ConfigProvider
+                theme={{
+                  components: {
+                    Select: {
+                      activeBorderColor: "rgb(250,59,59)",
+                      borderRadius: 0,
+                     
+                    },
+                  },
+                }}
+              >
               <Select
                 labelInValue
                 defaultValue={{ value: "oils", label: "Oils" }}
@@ -398,7 +479,7 @@ const AddRecipe = () => {
                     label: "With Oil",
                   },
                 ]}
-              />
+              /> </ConfigProvider>
             </Form.Item>
 
             <Form.Item
@@ -407,7 +488,17 @@ const AddRecipe = () => {
               rules={[
                 { required: true, message: "Please input Whole Food Type" },
               ]}
-            >
+            > <ConfigProvider
+            theme={{
+              components: {
+                Select: {
+                  activeBorderColor: "rgb(250,59,59)",
+                  borderRadius: 0,
+                 
+                },
+              },
+            }}
+          >
               <Select
                 labelInValue
                 defaultValue={{
@@ -432,7 +523,7 @@ const AddRecipe = () => {
                     label: "Paleo",
                   },
                 ]}
-              />
+              /> </ConfigProvider>
             </Form.Item>
 
             <Form.Item>

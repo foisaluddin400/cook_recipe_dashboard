@@ -107,7 +107,7 @@ const AddPromotionModal = ({ openAddModal, setOpenAddModal }) => {
           {/* Save Button */}
           <button
             type="submit"
-            className="w-full py-2 mt-2 bg-[#D17C51] text-white rounded-md"
+            className="w-full py-2 mt-2 bg-[#495F48] text-white rounded-md"
           >
             Save
           </button>

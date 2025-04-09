@@ -99,11 +99,11 @@ const Subscription = () => {
 
   return (
     <div>
-      <div className="p-1">
+      <div className="p-1 h-screen">
         <div className="flex justify-between">
           <div className="flex ">
-            <Navigate title={"Customers"}></Navigate>
-            <h1 className=" pl-2 font-semibold text-xl">{`(110)`}</h1>
+            <Navigate title={"Subscription Plan"}></Navigate>
+           
           </div>
           <button
             className="bg-[#495F48] px-5 py-2 text-white rounded"
