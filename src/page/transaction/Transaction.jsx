@@ -2,10 +2,11 @@ import { Table, Tag, Input, Dropdown } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { IoIosArrowDown } from "react-icons/io";
 import  Navigate  from "../../Navigate";
+import { useGetTransectionQuery } from "../redux/api/routeApi";
 
 const Transaction = () => {
- 
-
+ const {data:transiction} = useGetTransectionQuery()
+console.log(transiction)
   const columns = [
     {
       title: "SL no.",
@@ -14,11 +15,11 @@ const Transaction = () => {
     },
     {
         title: "Date",
-        dataIndex: "joiningDate",
-        key: "joiningDate",
+        dataIndex: "createdAt",
+        key: "createdAt",
       },
     {
-      title: "Full Name",
+      title: "User",
       dataIndex: "name",
       key: "name",
       render: (text, record) => (
@@ -32,18 +33,24 @@ const Transaction = () => {
         </div>
       ),
     },
+
+    {
+      title: "Price",
+      dataIndex: "fee",
+      key: "fee",
+    },
    
     {
-      title: "Subscription Interval",
-      dataIndex: "interval",
-      key: "interval",
+      title: "Subscription",
+      dataIndex: "subscription",
+      key: "subscription",
       render: (interval) => (
         <span className="text-[#D17C51]">{interval}</span>
       ),
     },
    
     {
-      title: "Status",
+      title: "Payment",
       dataIndex: "status",
       key: "status",
       render: (status) => (
@@ -60,108 +67,33 @@ const Transaction = () => {
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      sl: "#1233",
-      name: "Kathryn Murp",
-      avatar: "https://randomuser.me/api/portraits/women/65.jpg",
-      joiningDate: "12/04/24",
-      interval: "Silver",
-      fee: "$14.99",
-      status: "Due",
-    },
-    {
-      key: "2",
-      sl: "#1233",
-      name: "Devon Lane",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-      joiningDate: "12/04/24",
-      interval: "Gold",
-      fee: "$29.99",
-      status: "Paid",
-    },
-    {
-      key: "3",
-      sl: "#1233",
-      name: "Foysal Rahman",
-      avatar: "https://randomuser.me/api/portraits/men/74.jpg",
-      joiningDate: "12/04/24",
-      interval: "Silver",
-      fee: "$49.99",
-      status: "Paid",
-    },
-    {
-      key: "4",
-      sl: "#1233",
-      name: "Hari Danang",
-      avatar: "https://randomuser.me/api/portraits/men/62.jpg",
-      joiningDate: "12/04/24",
-      interval: "Gold",
-      fee: "$14.99",
-      status: "Due",
-    },
-    {
-      key: "5",
-      sl: "#1233",
-      name: "Floyd Miles",
-      avatar: "https://randomuser.me/api/portraits/men/11.jpg",
-      joiningDate: "12/04/24",
-      interval: "Diamond",
-      fee: "$14.99",
-      status: "Due",
-    },
-    {
-      key: "6",
-      sl: "#1233",
-      name: "Eleanor Pena",
-      avatar: "https://randomuser.me/api/portraits/women/20.jpg",
-      joiningDate: "12/04/24",
-      interval: "Silver",
-      fee: "$49.99",
-      status: "Due",
-    },
-    {
-      key: "7",
-      sl: "#1233",
-      name: "Devon Lane",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-      joiningDate: "12/04/24",
-      interval: "Gold",
-      fee: "$29.99",
-      status: "Paid",
-    },
-    {
-      key: "8",
-      sl: "#1233",
-      name: "Hari Danang",
-      avatar: "https://randomuser.me/api/portraits/men/62.jpg",
-      joiningDate: "12/04/24",
-      interval: "Silver",
-      fee: "$49.99",
-      status: "Paid",
-    },
-    {
-      key: "9",
-      sl: "#1233",
-      name: "Devon Lane",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-      joiningDate: "12/04/24",
-      interval: "Gold",
-      fee: "$14.99",
-      status: "Due",
-    },
-    {
-      key: "10",
-      sl: "#1233",
-      name: "Hari Danang",
-      avatar: "https://randomuser.me/api/portraits/men/62.jpg",
-      joiningDate: "12/04/24",
-      interval: "Diamond",
-      fee: "$14.99",
-      status: "Paid",
-    },
-  ];
+  // const data = [
+  //   {
+  //     key: "1",
+  //     sl: "#1233",
+  //     name: "Kathryn Murp",
+  //     avatar: "https://randomuser.me/api/portraits/women/65.jpg",
+  //     joiningDate: "12/04/24",
+  //     interval: "Silver",
+  //     fee: "$14.99",
+  //     status: "Due",
+  //   },
+   
+  // ];
+
+  const data =
+  transiction?.data?.result?.map((sub, index) => ({
+    key: sub?._id,
+    sl: index + 1,
+    name: sub?.name,
+    description: sub?.description,
+    deration: sub?.duration,
+    fee: sub?.amount,
+    subscription: sub?.subscriptionId?.name,
+    status:sub?.paymentStatus,
+    createdAt: new Date(sub?.createdAt).toLocaleString()
+   
+  })) || [];
 
   return (
     <div className="p-1 h-screen">

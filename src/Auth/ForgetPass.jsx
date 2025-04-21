@@ -1,18 +1,21 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Form, Input, message } from "antd";
+import { useForgotPasswordMutation } from "../page/redux/api/userApi";
 
 const ForgetPass = () => {
+  const navigate = useNavigate()
+  const[forgotPassword] = useForgotPasswordMutation();
   const onFinish = async (values) => {
     console.log(values);
 
-    // forgotPassword(values)
-    //   .unwrap()
-    //   .then((payload) => {
-    //     message.success("check Your Email");
-    //     navigate("/verify");
-    //     localStorage.setItem("email", values?.email);
-    //   })
-    //   .catch((error) => message.error(error?.data?.message));
+    forgotPassword(values)
+      .unwrap()
+      .then((payload) => {
+        message.success("check Your Email");
+        navigate("/verify");
+        localStorage.setItem("email", values?.email);
+      })
+      .catch((error) => message.error(error?.data?.message));
   };
 
   return (
@@ -56,7 +59,7 @@ const ForgetPass = () => {
               </Form.Item>
 
               <Form.Item>
-                <Link to={"/verify"}>
+               
                   <button
                     type="primary"
                     htmlType="submit"
@@ -64,7 +67,7 @@ const ForgetPass = () => {
                   >
                     Submit
                   </button>
-                </Link>
+              
               </Form.Item>
             </Form>
           </div>

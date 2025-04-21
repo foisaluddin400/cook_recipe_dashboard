@@ -13,13 +13,17 @@ import { useState } from "react";
 import { AddSubscriptionModal } from "./AddSubscriptionModal";
 import { EditSubscriptionModal } from "./EditSubscriptionModal";
 import Navigate from "../../Navigate";
+import { useGetSubscriptionQuery } from "../redux/api/routeApi";
+import { Description } from "@headlessui/react";
 
 const Subscription = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+  const {data:subscription} = useGetSubscriptionQuery();
 
   const handleEdit = (record) => {
+    setSelectedSubCategory(record);
     setEditModal(true);
   };
   const columns = [
@@ -55,7 +59,7 @@ const Subscription = () => {
       render: (_, record) => (
         <div>
           <button
-            onClick={() => handleEdit(record)}
+           onClick={() => handleEdit(record)}
             shape="circle"
             className="  rounded text-[#495F48]"
           >
@@ -66,36 +70,47 @@ const Subscription = () => {
     },
   ];
 
-  const data = [
-    {
-      id: "01",
-      name: "Barber Time",
-      description: "View ",
-      deration: "Monthly",
-      fee: "$09.00 ",
-    },
-    {
-      id: "02",
-      name: "Barber Time",
-      description: "View ",
-      deration: "Monthly",
-      fee: "$09.00 ",
-    },
-    {
-      id: "03",
-      name: "Barber Time",
-      description: "View ",
-      deration: "Monthly",
-      fee: "$09.00 ",
-    },
-    {
-      id: "04",
-      name: "Barber Time",
-      description: "View ",
-      deration: "Monthly",
-      fee: "$09.00 ",
-    },
-  ];
+  // const data = [
+  //   {
+  //     id: "01",
+  //     name: "Barber Time",
+  //     description: "View ",
+  //     deration: "Monthly",
+  //     fee: "$09.00 ",
+  //   },
+  //   {
+  //     id: "02",
+  //     name: "Barber Time",
+  //     description: "View ",
+  //     deration: "Monthly",
+  //     fee: "$09.00 ",
+  //   },
+  //   {
+  //     id: "03",
+  //     name: "Barber Time",
+  //     description: "View ",
+  //     deration: "Monthly",
+  //     fee: "$09.00 ",
+  //   },
+  //   {
+  //     id: "04",
+  //     name: "Barber Time",
+  //     description: "View ",
+  //     deration: "Monthly",
+  //     fee: "$09.00 ",
+  //   },
+  // ];
+
+  const data =
+    subscription?.data?.map((sub, index) => ({
+      key: sub?._id,
+      sl: index + 1,
+      name: sub?.name,
+      description: sub?.description,
+      deration: sub?.duration,
+      fee: sub?.fee,
+     
+    })) || [];
 
   return (
     <div>
@@ -113,11 +128,11 @@ const Subscription = () => {
           </button>
         </div>
         {/* Filter and Search */}
-        <div className=" p-2">
+        <div className="  mt-5">
          
 
           {/* Table */}
-          <div className=" rounded-md overflow-hidden">
+          <div className=" rounded-md overflow-hidden ">
             <Table
               columns={columns}
               dataSource={data}
@@ -132,6 +147,7 @@ const Subscription = () => {
         openAddModal={openAddModal}
       ></AddSubscriptionModal>
       <EditSubscriptionModal
+     selectedSubCategory={selectedSubCategory}
         editModal={editModal}
         setEditModal={setEditModal}
       ></EditSubscriptionModal>

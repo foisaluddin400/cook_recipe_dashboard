@@ -1,29 +1,30 @@
 
 import { Checkbox, Form, Input, message } from "antd";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginAdminMutation } from "../page/redux/api/userApi";
+import { useDispatch } from "react-redux";
+import { setToken } from "../page/redux/features/auth/authSlice";
 const Login = () => {
-  
+  const [loginAdmin] = useLoginAdminMutation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const onFinish = async (values) => {
     console.log(values)
-    // try {
+    try {
      
-    //   const payload = await loginAdmin(values).unwrap();
+      const payload = await loginAdmin(values).unwrap();
      
-    //   if (payload?.success) {
-    //     dispatch(setToken(payload?.data?.accessToken))
-    //     message.success("Login successful!");
-    //     navigate("/");
-    //   } else {
-    //     message.error(payload?.message || "Login failed!");
-    //   }
-    // } catch (error) {
-    //   console.error("Login error:", error);
-    //   message.error(error?.data?.message || "Something went wrong. Try again!");
-    // } finally {
-     
-   
-    // }
+      if (payload) {
+        console.log(payload)
+        dispatch(setToken(payload?.data?.accessToken))
+        message.success(payload?.message);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      message.error(error?.data?.message || "Something went wrong. Try again!");
+    } 
 };
 
   

@@ -1,22 +1,26 @@
+import { useGetDashboardCountQuery } from "../../page/redux/api/routeApi";
 import ShopRegistration from "./ShopRegistration";
 import { SubscriptionGrowth } from "./SubscriptionGrowth";
 import UserGrowth from "./UserGrowth";
 
 const Dashboard = () => {
+  const {data:dashboard} = useGetDashboardCountQuery()
   return (
     <div className="p-2 min-h-screen">
       <div className="  grid grid-cols-3 gap-4 text-center py-3">
         <div className="bg-white py-6 rounded-md">
-          <p className="text-[#2E4CB9] mt-3 text-sm">Total Customer</p>
-          <h1 className="text-3xl font-bold">123</h1>
+          <p className=" mt-3 text-2xl">Total User</p>
+          <h1 className="text-3xl font-bold">{dashboard?.data?.totalUsers || 0}</h1>
         </div>
         <div className=" bg-white py-6 rounded-md">
-          <h1 className="text-3xl font-bold">9</h1>
-          <p className="text-[#2E4CB9] mt-3 text-sm">Total Services</p>
+          
+          <p className=" mt-3 text-2xl">Subscription</p>
+          <h1 className="text-3xl font-bold">{dashboard?.data?.totalIncome || 0}</h1>
         </div>
         <div className=" bg-white py-6 rounded-md">
-          <h1 className="text-3xl font-bold">9</h1>
-          <p className="text-[#2E4CB9] mt-3 text-sm">Total Services</p>
+          
+          <p className=" mt-3 text-2xl">Total Recipe</p>
+          <h1 className="text-3xl font-bold">{dashboard?.data?.totalRecipe || 0}</h1>
         </div>
        
       </div>

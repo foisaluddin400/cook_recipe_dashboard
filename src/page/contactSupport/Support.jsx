@@ -5,48 +5,62 @@ import { Link } from "react-router-dom";
 
 import ReplyUser from "./ReplyUser";
 import Navigate from "../../Navigate";
+import { useGetContactQuery } from "../redux/api/routeApi";
+import { LiaReplySolid } from "react-icons/lia";
 
 const Support = () => {
   const [open, setOpen] = useState(false);
+  const {data:contactSupport} = useGetContactQuery()
   const [selectedShop, setSelectedShop] = useState(null);
   const [openAddModal, setOpenAddModal] = useState(false);
-  const dataSource = [
-    {
-      key: "1",
-      shopName: "Cameron Salons",
-      address: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
-      genderCategory: "Male",
-      category: "Skin care",
-      ownerName: "Mike Smith",
-      email: "sadgfjdg@gmail.com",
-      phone: "+3489 9999 9778",
-      bankName: "AB Bank",
-      description : 'the dfiasd eruopie dsfss',
-      accountHolder: "Dianne Russell",
-      accountNumber: "6575675678676",
-      branchCode: "4575467",
-      branchCity: "New York",
-      date:'12/5/2024',
-      city: "Us",
-      image: "https://via.placeholder.com/40",
-    },
-  ];
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     shopName: "Cameron Salons",
+  //     address: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
+  //     genderCategory: "Male",
+  //     category: "Skin care",
+  //     ownerName: "Mike Smith",
+  //     email: "sadgfjdg@gmail.com",
+  //     phone: "+3489 9999 9778",
+  //     bankName: "AB Bank",
+  //     description : 'the dfiasd eruopie dsfss',
+  //     accountHolder: "Dianne Russell",
+  //     accountNumber: "6575675678676",
+  //     branchCode: "4575467",
+  //     branchCity: "New York",
+  //     date:'12/5/2024',
+  //     city: "Us",
+  //     image: "https://via.placeholder.com/40",
+  //   },
+  // ];
+
+  const dataSource =
+  contactSupport?.data?.data?.map((sub, index) => ({
+    key: sub?._id,
+    sl: index + 1,
+    name: sub?.name,
+    email: sub?.email,
+    subject: sub?.subject,
+    message: sub?.message,
+    createdAt: new Date(sub?.createdAt).toLocaleString()
+  })) || [];
 
   const columns = [
     {
       title: "#",
-      dataIndex: "key",
-      key: "key",
+      dataIndex: "sl",
+      key: "sl",
     },
     {
       title: "Date",
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "createdAt",
+      key: "createdAt",
     },
     {
       title: "User Name",
-      dataIndex: "shopName",
-      key: "shopName",
+      dataIndex: "name",
+      key: "name",
       render: (text, record) => (
         <div className="flex items-center space-x-2">
           <img src={record.image} alt="Shop" className="w-8 h-8 rounded-full" />
@@ -55,9 +69,9 @@ const Support = () => {
       ),
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "Message",
+      dataIndex: "message",
+      key: "message",
     },
     
     {
@@ -79,12 +93,16 @@ const Support = () => {
       title: "Reply",
       key: "reply",
       render: (record) => (
-        <button
+  
+
+          <button
           onClick={() => setOpenAddModal(true)}
-          className="bg-red-500 border px-4 py-1 rounded"
-        >
-          Reply
-        </button>
+                    className={
+                      "bg-[#BBC5AA] text-white w-[30px] h-[30px] flex justify-center text-xl items-center rounded-md"
+                    }
+                  >
+                    <LiaReplySolid />
+                  </button>
       ),
     },
   ];
@@ -107,34 +125,25 @@ const Support = () => {
         open={open}
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
+        footer={false}
         width={500}
       >
         {selectedShop && (
           <div>
             <p>
-              <strong>Shop Name:</strong> {selectedShop.shopName}
-            </p>
-            <p>
-              <strong>Shop Address:</strong> {selectedShop.address}
-            </p>
-            <p>
-              <strong>Shop Gender Category:</strong>{" "}
-              {selectedShop.date}
-            </p>
-            <p>
-              <strong>Shop Category:</strong> {selectedShop.category}
-            </p>
-            <p>
-              <strong>Shop Owner Name:</strong> {selectedShop.ownerName}
+              <strong>Name:</strong> {selectedShop.name}
             </p>
             <p>
               <strong>Email:</strong> {selectedShop.email}
             </p>
             <p>
-              <strong>Phone Number:</strong> {selectedShop.description}
+              <strong>Subject:</strong>{" "}
+              {selectedShop.subject}
+            </p>
+            <p>
+              <strong>Message:</strong> {selectedShop.message}
             </p>
        
-          
           </div>
         )}
       </Modal>

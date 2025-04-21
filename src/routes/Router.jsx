@@ -23,6 +23,7 @@ import Transaction from "../page/transaction/Transaction";
 import Recipe from "../page/Recipe/Recipe";
 import AddRecipe from "../page/Recipe/AddRecipe";
 import EditRecipe from "../page/Recipe/EditRecipe";
+import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 
 
 export const router = createBrowserRouter([
@@ -30,7 +31,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: (
      
-        <DashboardLayout></DashboardLayout>
+        <ProtectedRoute><DashboardLayout></DashboardLayout></ProtectedRoute>
       
     ),
     children: [

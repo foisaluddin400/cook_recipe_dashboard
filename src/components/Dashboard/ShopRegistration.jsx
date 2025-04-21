@@ -1,104 +1,95 @@
 import React, { useState } from "react";
-import { Table, Button, Modal } from "antd";
+import { Table, Button, Modal, Space } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import { useGetAdminAllUserQuery } from "../../page/redux/api/userApi";
+import { FaRegEye } from "react-icons/fa";
 
 const ShopRegistration = () => {
-    const [open, setOpen] = useState(false);
-    const [selectedShop, setSelectedShop] = useState(null);
-
-    const dataSource = [
-        {
-            key: "1",
-            shopName: "Cameron Salons",
-            address: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
-            genderCategory: "Male",
-            category: "Skin care",
-            ownerName: "Mike Smith",
-            email: "sadgfjdg@gmail.com",
-            phone: "+3489 9999 9778",
-            bankName: "AB Bank",
-            accountHolder: "Dianne Russell",
-            accountNumber: "6575675678676",
-            branchCode: "4575467",
-            branchCity: "New York",
-            location:"Us",
-            image: "https://via.placeholder.com/40" 
-        }
-    ];
+    const [loadingId, setLoadingId] = useState(null);
+      const { data: userManagement, isLoading } = useGetAdminAllUserQuery();
+      console.log(userManagement)
+      const [selectedShop, setSelectedShop] = useState(null);
+      const [open, setOpen] = useState(false);
+      // Static mock data (replace this with actual data if needed)
     
-    const columns = [
-        {
-            title: "#",
-            dataIndex: "key",
-            key: "key",
-        },
-        {
-            title: "Shop Name",
-            dataIndex: "shopName",
-            key: "shopName",
-            render: (text, record) => (
-                <div className="flex items-center space-x-2">
-                    <img src={record.image} alt="Shop" className="w-8 h-8 rounded-full" />
-                    <span>{text}</span>
-                </div>
-            ),
-        },
-        {
-            title: "Email",
-            dataIndex: "email",
-            key: "email",
-        },
-        {
-            title: "Location",
-            dataIndex: "location",
-            key: "location",
-        },
-       
+      const userData =
+        userManagement?.data?.result?.slice(0,3)?.map((user, index) => ({
+          key: user?._id,
+          sl: index + 1,
+          userName: user?.name,
+          email: user?.email,
+          contactNumber: user?.phone_number,
+          address: `${user?.shipping_address?.street_address}, ${user?.shipping_address?.city}, ${user?.shipping_address?.state}, ${user?.shipping_address?.zip_code}`,
+          status: user?.status,
+        })) || [];
+    
         
+    
+      const columns = [
+        { title: "SL no.", dataIndex: "sl", width: 70, align: "center" },
+        { title: "User's Name", dataIndex: "userName", width: 150 },
+        { title: "Email", dataIndex: "email" },
+    
+        { title: "Address", dataIndex: "address" },
         {
-            title: "Action",
-            key: "action",
-            render: (record) => (
-                <Button onClick={() => { setSelectedShop(record); setOpen(true); }} shape="circle" icon={<EyeOutlined />} style={{ backgroundColor: "#016A70", color: "white" }} />
-            ),
+          title: "Action",
+          dataIndex: "action",
+          align: "center",
+          render: (_, record) => (
+            <Space size="middle">
+              <button
+                onClick={() => {
+                  setSelectedShop(record);
+                  setOpen(true);
+                }}
+                className={
+                  "bg-[#495F48] text-white w-[30px] h-[30px] flex justify-center text-xl items-center rounded-md"
+                }
+              >
+                <FaRegEye />
+              </button>
+              
+            </Space>
+          ),
         },
-    ];
+      ];
     
     return (
         <div className="p-3 bg-white mt-4">
-            <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center">
                 <h2 className="text-lg font-semibold pb-2">Shops Registration</h2>
                 <button className="text-[#AB684D]">View all</button>
             </div>
-            <Table dataSource={dataSource} columns={columns} pagination={false} />
-            
-            <Modal
-                title="Shop Details"
-                centered
-                open={open}
-                onOk={() => setOpen(false)}
-                onCancel={() => setOpen(false)}
-                width={500}
-            >
-                {selectedShop && (
-                    <div>
-                        <p><strong>Shop Name:</strong> {selectedShop.shopName}</p>
-                        <p><strong>Shop Address:</strong> {selectedShop.address}</p>
-                        <p><strong>Shop Gender Category:</strong> {selectedShop.genderCategory}</p>
-                        <p><strong>Shop Category:</strong> {selectedShop.category}</p>
-                        <p><strong>Shop Owner Name:</strong> {selectedShop.ownerName}</p>
-                        <p><strong>Email:</strong> {selectedShop.email}</p>
-                        <p><strong>Phone Number:</strong> {selectedShop.phone}</p>
-                        <h3 className="font-bold mt-4">Bank Info</h3>
-                        <p><strong>Bank Name:</strong> {selectedShop.bankName}</p>
-                        <p><strong>Account Holder Name:</strong> {selectedShop.accountHolder}</p>
-                        <p><strong>Account Number:</strong> {selectedShop.accountNumber}</p>
-                        <p><strong>Enter Branch Code:</strong> {selectedShop.branchCode}</p>
-                        <p><strong>Branch City:</strong> {selectedShop.branchCity}</p>
-                    </div>
-                )}
-            </Modal>
-        </div>
+
+
+      <Table columns={columns} dataSource={userData} pagination={false} />
+
+      <Modal
+        title="Shop Details"
+        centered
+        open={open}
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+        footer={null}
+        width={500}
+      >
+        {selectedShop && (
+          <div>
+            <p>
+              <strong>Name:</strong> {selectedShop.userName}
+            </p>
+            <p>
+              <strong>Shop Address:</strong> {selectedShop.address}
+            </p>
+
+            <p>
+              <strong>Email:</strong> {selectedShop.email}
+            </p>
+          </div>
+        )}
+      </Modal>
+    </div>
     );
 };
 

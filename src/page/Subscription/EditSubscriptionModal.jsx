@@ -1,19 +1,48 @@
-import { Form, Input, Modal, Select } from 'antd';
-import React, { useState } from 'react'
+import { Form, Input, message, Modal, Select } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { useUpdateSubscriptionMutation } from '../redux/api/routeApi';
 
 export const EditSubscriptionModal = ({editModal,
-    setEditModal,
+    setEditModal,selectedSubCategory
     }) => {
-    const [fileList, setFileList] = useState([]); 
-    const [form] = Form.useForm();
+      console.log(selectedSubCategory?.key)
+      const [updateSub] = useUpdateSubscriptionMutation();
+      const [form] = Form.useForm();
+      useEffect(() => {
+        if (selectedSubCategory) {
+          form.setFieldsValue({
+            name: selectedSubCategory?.name,
+            price: selectedSubCategory?.fee,
+            duration: selectedSubCategory?.deration,
+            descriptions: selectedSubCategory?.description,
+            
+          });
+        }
+      }, [selectedSubCategory, form]);
+   
+    
     const handleCancel = () => {
         form.resetFields();
-        setFileList([]);
         setEditModal(false);
       };
 
       const handleSubmit = async (values) => {
-       console.log(values)
+        const id = selectedSubCategory?.key
+        const data = {
+          name: values.name,
+          duration: values.duration,
+          fee: values.price,
+          description: values.descriptions,
+        };
+        try {
+          const response = await updateSub({data,id}).unwrap();
+          if (response) {
+            message.success(response?.message);
+            setEditModal(false)
+          }
+        } catch (error) {
+          message.error(error?.data?.message);
+        }
       };
   return (
     <Modal
@@ -53,8 +82,8 @@ export const EditSubscriptionModal = ({editModal,
               placeholder="Duration"
               optionFilterProp="label"
               options={[
-                { value: "yearly", label: "Yearly" },
-                { value: "monthly", label: "Monthly" },
+                { value: "Monthly", label: "Monthly" },
+                { value: "Weekly", label: "Weekly" },
                
               ]}
             />

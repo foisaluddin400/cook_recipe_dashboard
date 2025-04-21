@@ -5,24 +5,63 @@ import { IoArrowBackSharp } from 'react-icons/io5';
 import { MdDeleteOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import  Navigate  from '../../Navigate';
+import { useAddFaqMutation, useGetFaqQuery, useUpdateFaqMutation } from '../redux/api/settingApi';
 
 const { TextArea } = Input;
 
 const FAQ = () => {
-  const [faqData, setFaqData] = useState([
-    { _id: 1, question: "What is React?", answer: "React is a JavaScript library for building user interfaces." },
-    { _id: 2, question: "What is JSX?", answer: "JSX is a syntax extension for JavaScript recommended by React." }
-  ]);
+  const { data: faqData = [] } = useGetFaqQuery(); 
+  const [updateFaq] = useUpdateFaqMutation()
+  // const [faqData, setFaqData] = useState([
+  //   { _id: 1, question: "What is React?", answer: "React is a JavaScript library for building user interfaces." },
+  //   { _id: 2, question: "What is JSX?", answer: "JSX is a syntax extension for JavaScript recommended by React." }
+  // ]);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [addFaq] = useAddFaqMutation()
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [form] = Form.useForm();
-
+  const id = selectedFaq?._id
+  
   const openEditModal = (faq) => {
     setSelectedFaq(faq);
     form.setFieldsValue(faq);
     setIsEditModalOpen(true);
+  };
+
+  const handleSubmit = async (values) => {
+    try {
+      const res= await addFaq(values).unwrap();
+      console.log(res)
+      message.success(res?.message);
+      setIsModalOpen(false);
+      form.resetFields();
+    } catch (error) {
+      message.error(` ${error?.data?.message}`);
+    } finally {
+ 
+    }
+  };
+
+  const handleUpdateFaq = async () => {
+    
+    try {
+     
+      const values = await form.validateFields();
+      const data = {
+        answer: values.answer,
+        questions: values.questions,
+      };
+      console.log(data);
+  
+      await updateFaq({data,id}).unwrap();
+      message.success('FAQ updated successfully!');
+      setIsEditModalOpen(false);
+      form.resetFields();
+    } catch (error) {
+      message.error(`Error updating FAQ: ${error.message || error}`);
+    }
   };
 
   return (
@@ -30,10 +69,10 @@ const FAQ = () => {
       <Navigate title={'FAQ'}></Navigate>
 
       <div className="grid grid-cols-2 gap-5 mt-2">
-        {faqData.map((faq, i) => (
+        {faqData?.data?.map((faq, i) => (
           <div key={faq._id} className="p-2">
             <p className="pb-3">Question no: {i + 1}</p>
-            <p className="bg-[#F2F2F2] p-2 rounded-md">{faq.question}</p>
+            <p className="bg-[#F2F2F2] p-2 rounded-md">{faq.questions}</p>
             <div className="flex justify-between">
               <p className="py-2">Answer</p>
               <div className="flex gap-4">
@@ -45,7 +84,7 @@ const FAQ = () => {
                 </div>
               </div>
             </div>
-            <p className="bg-[#F2F2F2] p-2 rounded-md">{faq.answer}</p>
+            <p className="bg-[#F2F2F2] p-2 rounded-md">{faq?.answer}</p>
           </div>
         ))}
       </div>
@@ -54,35 +93,46 @@ const FAQ = () => {
         <button className='px-5 py-2 bg-[#495F48] text-white rounded' onClick={() => setIsModalOpen(true)} type="submit" > + Add FAQ </button>
       </div>
 
-      <Modal centered open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)}>
-        <p className="text-center font-semibold pb-5 text-xl">Add FAQ</p>
-        <Form form={form}>
-          <Form.Item name="question" rules={[{ required: true, message: 'Please enter a question' }]}>
-            <Input placeholder="Type question here..." />
-          </Form.Item>
-          <Form.Item name="answer" rules={[{ required: true, message: 'Please enter an answer' }]}>
-            <TextArea rows={4} placeholder="Type answer here..." />
-          </Form.Item>
-          <div className="flex items-center justify-center mt-2">
-            <Button type="primary" shape="round" size="large" style={{ background: "black", borderColor: "#495F48" }}> Save </Button>
-          </div>
-        </Form>
-      </Modal>
+     {/* Add FAQ Modal */}
+<Modal centered open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)}>
+  <p className="text-center font-semibold pb-5 text-xl">Add FAQ</p>
+  <Form onFinish={handleSubmit} form={form}>
+    <Form.Item name="questions" rules={[{ required: true, message: 'Please enter a question' }]}>
+      <Input placeholder="Type question here..." />
+    </Form.Item>
+    <Form.Item name="answer" rules={[{ required: true, message: 'Please enter an answer' }]}>
+      <TextArea rows={4} placeholder="Type answer here..." />
+    </Form.Item>
+    <Form.Item>
+      <div className="flex items-center justify-center mt-2">
+        <Button type="primary" shape="round" size="large" htmlType="submit" style={{ background: "black", borderColor: "#495F48" }}>
+          Save
+        </Button>
+      </div>
+    </Form.Item>
+  </Form>
+</Modal>
 
-      <Modal centered open={isEditModalOpen} footer={null} onCancel={() => setIsEditModalOpen(false)}>
-        <p className="text-center font-semibold pb-5 text-xl">Edit FAQ</p>
-        <Form form={form}>
-          <Form.Item name="question" rules={[{ required: true, message: 'Please enter a question' }]}>
-            <Input placeholder="Type question here..." />
-          </Form.Item>
-          <Form.Item name="answer" rules={[{ required: true, message: 'Please enter an answer' }]}>
-            <TextArea rows={4} placeholder="Type answer here..." />
-          </Form.Item>
-          <div className="flex items-center justify-center mt-2">
-            <Button type="primary" shape="round" size="large" style={{ background: "black", borderColor: "#495F48" }}> Save </Button>
-          </div>
-        </Form>
-      </Modal>
+{/* Edit FAQ Modal */}
+<Modal centered open={isEditModalOpen} footer={null} onCancel={() => setIsEditModalOpen(false)}>
+  <p className="text-center font-semibold pb-5 text-xl">Edit FAQ</p>
+  <Form form={form}>
+    <Form.Item name="questions" rules={[{ required: true, message: 'Please enter a question' }]}>
+      <Input placeholder="Type question here..." />
+    </Form.Item>
+    <Form.Item name="answer" rules={[{ required: true, message: 'Please enter an answer' }]}>
+      <TextArea rows={4} placeholder="Type answer here..." />
+    </Form.Item>
+    <Form.Item>
+      <div className="flex items-center justify-center mt-2">
+        <Button type="primary" shape="round" size="large" onClick={handleUpdateFaq} style={{ background: "black", borderColor: "#495F48" }}>
+          Update
+        </Button>
+      </div>
+    </Form.Item>
+  </Form>
+</Modal>
+
     </div>
   );
 };
