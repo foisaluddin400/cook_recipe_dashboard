@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Button, Modal, Input } from "antd";
+import { Table, Button, Modal, Input, Pagination } from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
@@ -10,7 +10,11 @@ import { LiaReplySolid } from "react-icons/lia";
 
 const Support = () => {
   const [open, setOpen] = useState(false);
-  const {data:contactSupport} = useGetContactQuery()
+  const [searchTerm, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  const {data:contactSupport} = useGetContactQuery({searchTerm, page: currentPage,
+    limit: pageSize,})
   const [selectedShop, setSelectedShop] = useState(null);
   const [openAddModal, setOpenAddModal] = useState(false);
   // const dataSource = [
@@ -107,6 +111,10 @@ const Support = () => {
     // },
   ];
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="p-1 h-screen ">
       <div className="flex justify-between mb-4">
@@ -114,10 +122,22 @@ const Support = () => {
         <Input
           placeholder="Search"
           prefix={<SearchOutlined />}
+          onChange={(e) => setSearch(e.target.value)}
           className="w-64 px-4 py-2 rounded-lg bg-white"
         />
       </div>
       <Table dataSource={dataSource} columns={columns} pagination={false} />
+
+      <div className="mt-4 flex justify-center">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={contactSupport?.data?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+            
+          />
+        </div>
 
       <Modal
         title="Details"

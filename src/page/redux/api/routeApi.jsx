@@ -46,9 +46,9 @@ const route = baseApi.injectEndpoints({
       }),
 
       getContact: builder.query({
-        query: () => {
+        query: ({searchTerm,page,limit}) => {
           return {
-            url: `/dashboard/get-message-support`,
+            url: `/dashboard/get-message-support?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
             method: "GET",
           };
         },

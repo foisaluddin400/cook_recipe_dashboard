@@ -8,7 +8,7 @@ import { useState } from "react";
 const Transaction = () => {
   const [searchTerm, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 3;
+  const pageSize = 10;
  const {data:transiction} = useGetTransectionQuery({searchTerm, page: currentPage,
   limit: pageSize,})
 console.log(transiction)

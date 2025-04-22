@@ -80,15 +80,26 @@ const useApi = baseApi.injectEndpoints({
       },
     }),
     getAdminAllUser: builder.query({
-      query: ({searchTerm,page, limit}) => {
+      query: ({ searchTerm, page, limit } = {}) => {
+        let url = "/dashboard/get_all_user";
+    
+        const params = [];
+        if (searchTerm) params.push(`searchTerm=${searchTerm}`);
+        if (page) params.push(`page=${page}`);
+        if (limit) params.push(`limit=${limit}`);
+    
+        if (params.length > 0) {
+          url += `?${params.join("&")}`;
+        }
+    
         return {
-          url: `/dashboard/get_all_user?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
+          url,
           method: "GET",
         };
-
       },
       providesTags: ["host"],
     }),
+    
 
     blockUser: builder.mutation({
       query: (data) => ({

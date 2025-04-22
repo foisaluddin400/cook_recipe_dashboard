@@ -143,19 +143,22 @@ select option {
 .ant-pagination .ant-pagination-item {
   background-color: transparent !important; 
   border-color: transparent !important; 
-  
+  border-radius: 5px !important;
+  color: #495F48 !important;
 }
 
 .ant-pagination .ant-pagination-item-active {
-  background-color: #495F48 !important;
-  border-color: none !important;
+  color: black !important;
+  background-color: white !important;
+  border-color: #495F48 !important;
+  border-radius: 5px !important;
 }
 
 .ant-pagination .ant-pagination-item a {
-  color: black !important; 
+  color: #495F48 !important;
 }
 
 .ant-pagination .ant-pagination-item-active a {
-  color: white !important;
+  color: #495F48 !important;
 }
 
