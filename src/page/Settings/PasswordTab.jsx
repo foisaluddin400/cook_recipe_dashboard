@@ -2,14 +2,18 @@ import { Button, Form, Input, message } from "antd";
 import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { useChangePasswordMutation } from "../redux/api/userApi";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/features/auth/authSlice";
 
 
 export const PasswordTab = () => {
  
 
   const [passError, setPassError] = useState("");
+  const [updatePassword] = useChangePasswordMutation();
   const navigate = useNavigate(); 
-
+  const dispatch = useDispatch();
   const handlePasswordChange = async (values) => {
     if (values?.newPassword === values.oldPassword) {
       return setPassError("Your old password cannot be your new password.");
@@ -22,20 +26,20 @@ export const PasswordTab = () => {
 
     
     const data = {
-      id: adminId,
+      
       oldPassword: values.oldPassword,
       newPassword: values.newPassword,
+      confirmPassword: values.confirmPassword
     };
 
 
-    // try {
-    //   await changePassword(data).unwrap(); 
-    //   message.success("Password updated successfully!");
-    //   localStorage.removeItem("accessToken"); 
-    //   navigate("/login"); 
-    // } catch (error) {
-    //   message.error(error?.data?.message || "Failed to update password.");
-    // }
+    try {
+      const response = await updatePassword(data).unwrap(); 
+      message.success(response?.message);
+      dispatch(logout());
+    } catch (error) {
+      message.error(error?.data?.message || "Failed to update password.");
+    }
   };
 
   return (

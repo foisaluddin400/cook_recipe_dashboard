@@ -74,15 +74,15 @@ const useApi = baseApi.injectEndpoints({
       query: (data) => {
         return {
           url: "/auth/change-password",
-          method: "PUT",
+          method: "PATCH",
           body: data,
         };
       },
     }),
     getAdminAllUser: builder.query({
-      query: () => {
+      query: ({searchTerm,page, limit}) => {
         return {
-          url: `/dashboard/get_all_user`,
+          url: `/dashboard/get_all_user?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
           method: "GET",
         };
 

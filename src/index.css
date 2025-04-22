@@ -137,3 +137,25 @@ select option {
 
 
 
+
+
+
+.ant-pagination .ant-pagination-item {
+  background-color: transparent !important; 
+  border-color: transparent !important; 
+  
+}
+
+.ant-pagination .ant-pagination-item-active {
+  background-color: #495F48 !important;
+  border-color: none !important;
+}
+
+.ant-pagination .ant-pagination-item a {
+  color: black !important; 
+}
+
+.ant-pagination .ant-pagination-item-active a {
+  color: white !important;
+}
+

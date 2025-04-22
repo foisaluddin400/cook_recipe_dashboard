@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Space, message } from "antd";
+import { Table, Space, message, Pagination } from "antd";
 import { FiEdit2 } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDeleteAddMutation, useGetAllAddQuery } from "../redux/api/settingApi";
@@ -7,8 +7,12 @@ import { imageUrl } from "../redux/api/baseApi";
 import EditPromotionModal from "./EditPromotionModal";
 
 const Adds = () => {
-  const { data: allAdd, isLoading } = useGetAllAddQuery();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  const { data: allAdd, isLoading } = useGetAllAddQuery({page: currentPage,
+    limit: pageSize,});
   const [deleteAdd] = useDeleteAddMutation()
+  
   const [editModal, setEditModal] = useState(false);
   const [selectedAdd, setSelectedCategory] = useState(null);
   console.log(allAdd);
@@ -90,6 +94,10 @@ const Adds = () => {
     },
   ];
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
 
   return (
     <div className="p-3">
@@ -99,6 +107,17 @@ const Adds = () => {
         pagination={false}
         rowClassName="border-b border-gray-200"
       />
+
+<div className="mt-4 flex justify-center">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={allAdd?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+            
+          />
+        </div>
 
       <EditPromotionModal
         editModal={editModal}

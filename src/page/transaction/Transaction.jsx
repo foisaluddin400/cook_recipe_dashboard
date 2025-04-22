@@ -1,11 +1,16 @@
-import { Table, Tag, Input, Dropdown } from "antd";
+import { Table, Tag, Input, Dropdown, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { IoIosArrowDown } from "react-icons/io";
 import  Navigate  from "../../Navigate";
 import { useGetTransectionQuery } from "../redux/api/routeApi";
+import { useState } from "react";
 
 const Transaction = () => {
- const {data:transiction} = useGetTransectionQuery()
+  const [searchTerm, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 3;
+ const {data:transiction} = useGetTransectionQuery({searchTerm, page: currentPage,
+  limit: pageSize,})
 console.log(transiction)
   const columns = [
     {
@@ -102,6 +107,10 @@ console.log(transiction)
    
   })) || [];
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="p-1 h-screen">
       <div className="flex justify-between ">
@@ -112,6 +121,7 @@ console.log(transiction)
         <Input
           placeholder="Search"
           prefix={<SearchOutlined />}
+          onChange={(e) => setSearch(e.target.value)}
           className="w-64 px-4 py-2 rounded-lg bg-white"
         />
       </div>
@@ -125,6 +135,16 @@ console.log(transiction)
             dataSource={data}
             pagination={false}
             rowClassName="border-b border-gray-300"
+          />
+        </div>
+        <div className="mt-4 flex justify-center">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={transiction?.data?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+            
           />
         </div>
       </div>

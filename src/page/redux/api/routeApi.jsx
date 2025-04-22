@@ -36,9 +36,9 @@ const route = baseApi.injectEndpoints({
       }),
 
     getTransection: builder.query({
-        query: () => {
+        query: ({searchTerm,page, limit}) => {
           return {
-            url: `/payment/get-transaction`,
+            url: `/payment/get-transaction?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
             method: "GET",
           };
         },

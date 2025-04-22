@@ -92,9 +92,9 @@ const setting = baseApi.injectEndpoints({
     }),
 
     getAllAdd: builder.query({
-      query: () => {
+      query: ({page,limit}) => {
         return {
-          url: `/dashboard/all-adds`,
+          url: `/dashboard/all-adds?page=${page}&limit=${limit}`,
           method: "GET",
         };
       },

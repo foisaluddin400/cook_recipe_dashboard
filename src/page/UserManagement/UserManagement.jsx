@@ -1,4 +1,4 @@
-import { Table, Input, Space, Spin, message, Modal } from "antd";
+import { Table, Input, Space, Spin, message, Modal, Pagination } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { MdBlockFlipped } from "react-icons/md";
 import { useState } from "react";
@@ -9,7 +9,11 @@ import { useBlockUserMutation, useGetAdminAllUserQuery } from "../redux/api/user
 
 const UserManagement = () => {
   const [loadingId, setLoadingId] = useState(null);
-  const { data: userManagement, isLoading } = useGetAdminAllUserQuery();
+  const [searchTerm, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  const { data: userManagement, isLoading } = useGetAdminAllUserQuery({searchTerm, page: currentPage,
+    limit: pageSize,});
   console.log(userManagement)
   const[blockUser] = useBlockUserMutation()
   const [selectedShop, setSelectedShop] = useState(null);
@@ -93,6 +97,11 @@ const UserManagement = () => {
     },
   ];
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+
   return (
     <div className="h-screen  p-1">
       <div className="flex justify-between">
@@ -100,11 +109,23 @@ const UserManagement = () => {
         <Input
           placeholder="Search here..."
           prefix={<SearchOutlined />}
+          onChange={(e) => setSearch(e.target.value)}
           style={{ marginBottom: "16px", maxWidth: "300px" }}
         />
       </div>
 
       <Table columns={columns} dataSource={userData} pagination={false} />
+
+      <div className="mt-4 flex justify-center">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={userManagement?.data?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+            
+          />
+        </div>
 
       <Modal
         title="Shop Details"
