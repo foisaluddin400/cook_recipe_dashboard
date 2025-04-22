@@ -89,22 +89,22 @@ const Support = () => {
         />
       ),
     },
-    {
-      title: "Reply",
-      key: "reply",
-      render: (record) => (
+    // {
+    //   title: "Reply",
+    //   key: "reply",
+    //   render: (record) => (
   
 
-          <button
-          onClick={() => setOpenAddModal(true)}
-                    className={
-                      "bg-[#BBC5AA] text-white w-[30px] h-[30px] flex justify-center text-xl items-center rounded-md"
-                    }
-                  >
-                    <LiaReplySolid />
-                  </button>
-      ),
-    },
+    //       <button
+    //       onClick={() => setOpenAddModal(true)}
+    //                 className={
+    //                   "bg-[#BBC5AA] text-white w-[30px] h-[30px] flex justify-center text-xl items-center rounded-md"
+    //                 }
+    //               >
+    //                 <LiaReplySolid />
+    //               </button>
+    //   ),
+    // },
   ];
 
   return (
@@ -147,10 +147,10 @@ const Support = () => {
           </div>
         )}
       </Modal>
-      <ReplyUser
+      {/* <ReplyUser
         setOpenAddModal={setOpenAddModal}
         openAddModal={openAddModal}
-      ></ReplyUser>
+      ></ReplyUser> */}
     </div>
   );
 };

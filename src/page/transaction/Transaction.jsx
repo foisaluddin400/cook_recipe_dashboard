@@ -18,6 +18,11 @@ console.log(transiction)
         dataIndex: "createdAt",
         key: "createdAt",
       },
+      {
+        title: "TrasactionId",
+        dataIndex: "trasactionId",
+        key: "trasactionId",
+      },
     {
       title: "User",
       dataIndex: "name",
@@ -85,13 +90,15 @@ console.log(transiction)
   transiction?.data?.result?.map((sub, index) => ({
     key: sub?._id,
     sl: index + 1,
-    name: sub?.name,
+    name: sub?.paymentDetails?.email,
     description: sub?.description,
     deration: sub?.duration,
     fee: sub?.amount,
     subscription: sub?.subscriptionId?.name,
+    trasactionId: sub?.paymentDetails?.payId,
+   
     status:sub?.paymentStatus,
-    createdAt: new Date(sub?.createdAt).toLocaleString()
+    createdAt: new Date(sub?.createdAt).toLocaleDateString()
    
   })) || [];
 
