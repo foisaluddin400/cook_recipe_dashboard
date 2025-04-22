@@ -5,7 +5,7 @@ import { useUpdateSubscriptionMutation } from '../redux/api/routeApi';
 export const EditSubscriptionModal = ({editModal,
     setEditModal,selectedSubCategory
     }) => {
-      console.log(selectedSubCategory?.key)
+     
       const [updateSub] = useUpdateSubscriptionMutation();
       const [form] = Form.useForm();
       useEffect(() => {

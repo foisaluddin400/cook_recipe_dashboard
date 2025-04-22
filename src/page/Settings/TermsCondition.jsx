@@ -24,7 +24,7 @@ const[addTerms] = useAddTermsMutation()
     setLoading(true);
     const res = await addTerms(data).unwrap();
     setLoading(false);
-    console.log("res", res);
+
     message.success(res?.message);
   };
 

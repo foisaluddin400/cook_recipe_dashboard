@@ -11,7 +11,7 @@ const Transaction = () => {
   const pageSize = 10;
  const {data:transiction} = useGetTransectionQuery({searchTerm, page: currentPage,
   limit: pageSize,})
-console.log(transiction)
+
   const columns = [
     {
       title: "SL no.",

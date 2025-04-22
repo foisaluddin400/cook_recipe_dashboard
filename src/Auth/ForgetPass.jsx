@@ -6,7 +6,7 @@ const ForgetPass = () => {
   const navigate = useNavigate()
   const[forgotPassword] = useForgotPasswordMutation();
   const onFinish = async (values) => {
-    console.log(values);
+   
 
     forgotPassword(values)
       .unwrap()

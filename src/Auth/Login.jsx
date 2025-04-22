@@ -10,13 +10,13 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onFinish = async (values) => {
-    console.log(values)
+  
     try {
      
       const payload = await loginAdmin(values).unwrap();
      
       if (payload) {
-        console.log(payload)
+      
         dispatch(setToken(payload?.data?.accessToken))
         message.success(payload?.message);
         navigate("/");

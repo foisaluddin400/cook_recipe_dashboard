@@ -8,7 +8,7 @@ import { FaRegEye } from "react-icons/fa";
 const ShopRegistration = () => {
     const [loadingId, setLoadingId] = useState(null);
       const { data: userManagement, isLoading } = useGetAdminAllUserQuery();
-      console.log(userManagement)
+     
       const [selectedShop, setSelectedShop] = useState(null);
       const [open, setOpen] = useState(false);
       // Static mock data (replace this with actual data if needed)

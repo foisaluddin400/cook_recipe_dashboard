@@ -15,7 +15,7 @@ const Adds = () => {
   
   const [editModal, setEditModal] = useState(false);
   const [selectedAdd, setSelectedCategory] = useState(null);
-  console.log(allAdd);
+ 
 
   const handleEdit = (record) => {
     setSelectedCategory(record);
@@ -34,7 +34,7 @@ const Adds = () => {
   }));
 
   const handleDeleteCategory = async (id) => {
-    console.log(id)
+  
     try {
       const res = await deleteAdd( id ).unwrap(); 
       message.success(res?.message);

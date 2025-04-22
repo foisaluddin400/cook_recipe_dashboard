@@ -14,7 +14,7 @@ const UserManagement = () => {
   const pageSize = 10;
   const { data: userManagement, isLoading } = useGetAdminAllUserQuery({searchTerm, page: currentPage,
     limit: pageSize,});
-  console.log(userManagement)
+
   const[blockUser] = useBlockUserMutation()
   const [selectedShop, setSelectedShop] = useState(null);
   const [open, setOpen] = useState(false);

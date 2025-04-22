@@ -47,7 +47,7 @@ const AddPromotionModal = ({ openAddModal, setOpenAddModal }) => {
 
     try {
       const res= await adds(formData).unwrap();
-      console.log(res)
+  
       setLoading(false);
       message.success(res?.message);
       setOpenAddModal(false);

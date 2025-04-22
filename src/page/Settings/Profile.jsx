@@ -11,7 +11,7 @@ import { useGetProfileQuery } from "../redux/api/userApi";
 const Profile = () => {
   const [profilePic, setProfilePic] = useState(null);
   const {data:adminProfile} = useGetProfileQuery()
-  console.log(adminProfile)
+
   const [activeTab, setActiveTab] = useState("1");
 
   const [form] = Form.useForm();

@@ -34,7 +34,7 @@ const FAQ = () => {
   const handleSubmit = async (values) => {
     try {
       const res= await addFaq(values).unwrap();
-      console.log(res)
+    
       message.success(res?.message);
       setIsModalOpen(false);
       form.resetFields();
@@ -52,7 +52,7 @@ const FAQ = () => {
         answer: values.answer,
         questions: values.questions,
       };
-      console.log(data);
+      
   
       await updateFaq({data,id}).unwrap();
       message.success('FAQ updated successfully!');

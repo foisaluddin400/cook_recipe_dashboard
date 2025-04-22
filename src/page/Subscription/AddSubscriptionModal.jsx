@@ -12,7 +12,7 @@ export const AddSubscriptionModal = ({ openAddModal, setOpenAddModal }) => {
   };
 
   const handleSubmit = async (values) => {
-    console.log(values);
+
     const data = {
       name: values.name,
       duration: values.duration,

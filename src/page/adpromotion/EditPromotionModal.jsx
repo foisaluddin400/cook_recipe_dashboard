@@ -7,7 +7,7 @@ import { useUpdateAddMutation } from "../redux/api/settingApi";
 
 const EditPromotionModal = ({ editModal, setEditModal, selectedAdd }) => {
   const [editAdd] = useUpdateAddMutation()
-  console.log(selectedAdd)
+
     const [form] = Form.useForm();
    const [fileList, setFileList] = useState([]);
    const [loading, setLoading] = useState(false);
@@ -56,8 +56,7 @@ const EditPromotionModal = ({ editModal, setEditModal, selectedAdd }) => {
   
     const handleSubmit = async (values) => {
       const id = selectedAdd?.key; 
-      console.log(id);
-      console.log("Submitted:", values);
+   
     
       const existingImages = fileList.filter((file) => file.url);
       const newImages = fileList.filter((file) => file.originFileObj);
@@ -77,7 +76,7 @@ const EditPromotionModal = ({ editModal, setEditModal, selectedAdd }) => {
     
       try {
         const res = await editAdd({ data: formData, id }).unwrap();
-        console.log(res);
+      
         setLoading(false);
         message.success(res?.message);
         setFileList((prevFileList) => prevFileList.filter((file) => file.url));
