@@ -1,11 +1,44 @@
-import React from "react";
-import { Table, Button, Space, Tooltip } from "antd";
+import React, { useState } from "react";
+import { Table, Space, message } from "antd";
 import { FiEdit2 } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useDeleteAddMutation, useGetAllAddQuery } from "../redux/api/settingApi";
+import { imageUrl } from "../redux/api/baseApi";
+import EditPromotionModal from "./EditPromotionModal";
 
+const Adds = () => {
+  const { data: allAdd, isLoading } = useGetAllAddQuery();
+  const [deleteAdd] = useDeleteAddMutation()
+  const [editModal, setEditModal] = useState(false);
+  const [selectedAdd, setSelectedCategory] = useState(null);
+  console.log(allAdd);
 
-const Adds = ({setEditModal}) => {
-    
+  const handleEdit = (record) => {
+    setSelectedCategory(record);
+    setEditModal(true);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const tableData = allAdd?.data?.map((item, index) => ({
+    key: item._id,
+    serial: index + 1,
+    image: item.image,
+    url: item.url,
+  }));
+
+  const handleDeleteCategory = async (id) => {
+    console.log(id)
+    try {
+      const res = await deleteAdd( id ).unwrap(); 
+      message.success(res?.message);
+    } catch (error) {
+      message.error(error?.data?.message || 'Error deleting FAQ');
+    }
+  };
+
   const columns = [
     {
       title: "S no.",
@@ -20,16 +53,17 @@ const Adds = ({setEditModal}) => {
       key: "ads",
       render: (_, record) => (
         <div className="flex justify-center">
-          <div className="flex items-start gap-3 bg-gray-100 rounded-md p-2 shadow-sm w-fit">
+          <div className="flex items-center gap-3 bg-[#B4D3B3] rounded-md shadow-sm w-fit">
             <img
-              src={record.image}
+              src={`${imageUrl}/${record.image}`}
               alt="Ad"
-              className="w-14 h-14 rounded-md object-cover"
+              className="w-20 h-20 rounded-md object-cover"
             />
-            <div>
-              <h4 className="text-sm font-semibold leading-tight">Barber time</h4>
-              <p className="text-xs text-gray-600 mb-1">Faux hawk</p>
-              <span className="text-xs text-gray-500">10/06/24 - 25/06/24</span>
+            <div className="p-4">
+              <h4 className="text-sm font-semibold leading-tight">Welcome</h4>
+              <a href={record.url} target="_blank" rel="noopener noreferrer">
+                {record.url}
+              </a>
             </div>
           </div>
         </div>
@@ -38,62 +72,39 @@ const Adds = ({setEditModal}) => {
     {
       title: <div className="text-right pr-4">Action</div>,
       key: "action",
-      render: () => (
-        <div className="flex justify-end pr-4">
+      render: (record) => (
+        <div className="flex justify-end pr-2">
           <Space size="middle">
-        
             <button
-              onClick={() => setEditModal(true)}
-              
+              onClick={() => handleEdit(record)}
               className="bg-[#495F48] p-2 rounded text-xl text-white"
-             
-            ><FiEdit2 /></button>
-        
-       
-            <button
-            
-              className="bg-red-500 p-2 rounded text-xl text-white"
-              
-            ><RiDeleteBin6Line /></button>
-      
-        </Space>
+            >
+              <FiEdit2 />
+            </button>
+            <button onClick={() => handleDeleteCategory(record?.key)} className="bg-red-500 p-2 rounded text-xl text-white">
+              <RiDeleteBin6Line />
+            </button>
+          </Space>
         </div>
       ),
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      serial: "#12333",
-      image: "https://i.ibb.co/LprpYP4/barber.jpg",
-    },
-    {
-      key: "2",
-      serial: "#12333",
-      image: "https://i.ibb.co/LprpYP4/barber.jpg",
-    },
-    {
-      key: "3",
-      serial: "#12333",
-      image: "https://i.ibb.co/LprpYP4/barber.jpg",
-    },
-    {
-      key: "4",
-      serial: "#12333",
-      image: "https://i.ibb.co/LprpYP4/barber.jpg",
-    },
-  ];
 
   return (
     <div className="p-3">
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={tableData}
         pagination={false}
         rowClassName="border-b border-gray-200"
       />
-      
+
+      <EditPromotionModal
+        editModal={editModal}
+        setEditModal={setEditModal}
+        selectedAdd={selectedAdd}
+      ></EditPromotionModal>
     </div>
   );
 };

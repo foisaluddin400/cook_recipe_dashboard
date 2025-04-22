@@ -5,13 +5,14 @@ import { IoArrowBackSharp } from 'react-icons/io5';
 import { MdDeleteOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import  Navigate  from '../../Navigate';
-import { useAddFaqMutation, useGetFaqQuery, useUpdateFaqMutation } from '../redux/api/settingApi';
+import { useAddFaqMutation, useDeleteFaqMutation, useGetFaqQuery, useUpdateFaqMutation } from '../redux/api/settingApi';
 
 const { TextArea } = Input;
 
 const FAQ = () => {
   const { data: faqData = [] } = useGetFaqQuery(); 
-  const [updateFaq] = useUpdateFaqMutation()
+  const [deleteFaq] = useDeleteFaqMutation();
+  const [updateFaq] = useUpdateFaqMutation();
   // const [faqData, setFaqData] = useState([
   //   { _id: 1, question: "What is React?", answer: "React is a JavaScript library for building user interfaces." },
   //   { _id: 2, question: "What is JSX?", answer: "JSX is a syntax extension for JavaScript recommended by React." }
@@ -39,9 +40,7 @@ const FAQ = () => {
       form.resetFields();
     } catch (error) {
       message.error(` ${error?.data?.message}`);
-    } finally {
- 
-    }
+    } 
   };
 
   const handleUpdateFaq = async () => {
@@ -64,6 +63,17 @@ const FAQ = () => {
     }
   };
 
+  const handleDeleteFaq = async (id) => {
+    
+    try {
+      const res = await deleteFaq( id ).unwrap(); // send { id: "..." }
+      message.success(res?.message);
+    } catch (error) {
+      message.error(error?.data?.message || 'Error deleting FAQ');
+    }
+  };
+  
+
   return (
     <div className=" p-1 h-screen">
       <Navigate title={'FAQ'}></Navigate>
@@ -80,7 +90,7 @@ const FAQ = () => {
                   Edit
                 </button>
                 <div className="py-2">
-                  <MdDeleteOutline className="text-xl cursor-pointer" />
+                  <MdDeleteOutline onClick={() => handleDeleteFaq(faq._id)} className="text-xl cursor-pointer" />
                 </div>
               </div>
             </div>

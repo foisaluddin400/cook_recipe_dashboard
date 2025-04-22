@@ -38,6 +38,102 @@ const setting = baseApi.injectEndpoints({
       }),
 
 
+      deleteFaq :  builder.mutation({
+        query : (id)=>{
+            return {
+                url : `/dashboard/delete-faqs/${id}`,
+                method : 'DELETE'
+            }
+        },
+        invalidatesTags :['updateProfile']
+    }),
+
+
+    addTerms: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/dashboard/addupdate-termsConditions",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    getTerms: builder.query({
+      query: () => {
+        return {
+          url: `/dashboard/get-rules`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    addPrivacy: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/dashboard/addupdate-privacy-policy",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    getPrivacy: builder.query({
+      query: () => {
+        return {
+          url: `/dashboard/get-privacy-policy`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    getAllAdd: builder.query({
+      query: () => {
+        return {
+          url: `/dashboard/all-adds`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    addAdd: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/dashboard/create-adds",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    deleteAdd :  builder.mutation({
+      query : (id)=>{
+          return {
+              url : `/dashboard/delete-adds/${id}`,
+              method : 'DELETE'
+          }
+      },
+      invalidatesTags :['updateProfile']
+  }),
+
+
+  updateAdd: builder.mutation({
+    query: ({data,id}) => {
+      return {
+        url: `/dashboard/edit-adds/${id}`,
+        method: "PATCH",
+        body: data,
+      };
+    },
+    invalidatesTags: ["updateProfile"],
+  }),
+
    
   }),
 });
@@ -45,5 +141,14 @@ const setting = baseApi.injectEndpoints({
 export const {
  useGetFaqQuery,
  useAddFaqMutation,
- useUpdateFaqMutation
+ useUpdateFaqMutation,
+ useDeleteFaqMutation,
+ useAddTermsMutation,
+ useGetTermsQuery,
+ useAddPrivacyMutation,
+ useGetPrivacyQuery,
+ useGetAllAddQuery,
+ useAddAddMutation,
+ useDeleteAddMutation,
+ useUpdateAddMutation
 } = setting;

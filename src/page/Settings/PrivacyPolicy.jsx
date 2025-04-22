@@ -1,19 +1,34 @@
-import  { useState, useRef, } from 'react';
+import  { useState, useRef, useEffect, } from 'react';
 import JoditEditor from 'jodit-react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import  Navigate  from '../../Navigate';
 
+import { message } from 'antd';
+import { useAddPrivacyMutation, useGetPrivacyQuery } from '../redux/api/settingApi';
+
 
 const PrivacyPolicy = () => {
+const{data:terms} = useGetPrivacyQuery();
+const[addTerms] = useAddPrivacyMutation()
 
   const editor = useRef(null);
   const [content, setContent] = useState('');
-  // const [isLoading, seLoading] = useState(false)
-  const navigate = useNavigate(); 
-  // const handleTerms = () => {
-  //     console.log(content)
-  // }
+  const [isLoading, setLoading] = useState(false)
+
+  const handleTerms = async () => {
+    const data = {
+      description: content,
+     
+    };
+   
+    setLoading(true);
+    const res = await addTerms(data).unwrap();
+    setLoading(false);
+    console.log("res", res);
+    message.success(res?.message);
+  };
+
   const config = {
       readonly: false,
       placeholder: 'Start typings...',
@@ -27,9 +42,13 @@ const PrivacyPolicy = () => {
       ]
   }
 
+  useEffect(() => {
+    setContent(terms?.data?.description);
+  }, [terms]);
+
   return (
     <div className="p-1 ">
-      <Navigate title={'Privacy Policy'}></Navigate>
+      <Navigate title={'Terms & Condition'}></Navigate>
 
       <JoditEditor
         ref={editor}
@@ -37,13 +56,14 @@ const PrivacyPolicy = () => {
         config={config}
         tabIndex={1}
         onBlur={newContent => setContent(newContent)}
-        // onChange={newContent => { }}
+        onChange={newContent => { }}
       />
       
 
       <div className="mt-5 flex justify-center">
         <button
-       
+       onClick={handleTerms}
+       loading={isLoading}
           className="bg-[#02111E] py-2 px-4 rounded text-white"
         >
           Save & change

@@ -1,23 +1,29 @@
 import { Checkbox, Form, Input, message } from "antd";
+import { useResetPasswordMutation } from "../page/redux/api/userApi";
+import { useNavigate } from "react-router-dom";
 
 const ResetPass = () => {
+
+const[resetPassword] = useResetPasswordMutation()
+const navigate = useNavigate()
+
   const onFinish = async (values) => {
     console.log(values);
+    const email = localStorage.getItem("email")
+    const data = {
+      
+      newPassword: values?.password,
+      confirmPassword: values?.confirmPassword,
+    };
 
-    // const data = {
-    //   email: localStorage.getItem("email"),
-    //   newPassword: values?.password,
-    //   confirmPassword: values?.confirmPassword,
-    // };
+    try {
+      const result = await resetPassword({ data, email:email }).unwrap();
 
-    // try {
-    //   const result = await resetPassword({ data, email: data.email }).unwrap();
-
-    //   message.success(result?.message);
-    //   navigate("/login");
-    // } catch (error) {
-    //   message.error(error?.data?.message || "Error resetting password.");
-    // }
+      message.success(result?.message);
+      navigate("/login");
+    } catch (error) {
+      message.error(error?.data?.message || "Error resetting password.");
+    }
   };
   return (
     <div className="min-h-screen  bg-[#495F48]">

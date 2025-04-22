@@ -1,13 +1,17 @@
-import { Form, Modal, Upload, DatePicker, TimePicker, Input } from "antd";
+import { Form, Modal, Upload, DatePicker, TimePicker, Input, message, Spin } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { useAddAddMutation } from "../redux/api/settingApi";
 
 const AddPromotionModal = ({ openAddModal, setOpenAddModal }) => {
+  const[adds] = useAddAddMutation()
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
-
-  const onChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const [loading, setLoading] = useState(false);
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
 
   const onPreview = async (file) => {
     let src = file.url;
@@ -30,8 +34,29 @@ const AddPromotionModal = ({ openAddModal, setOpenAddModal }) => {
     setOpenAddModal(false);
   };
 
-  const handleSubmit = (values) => {
-    console.log("Submitted:", values);
+  const handleSubmit = async (values) => {
+    const formData = new FormData();
+
+    formData.append("url", values?.url);
+
+
+    fileList.forEach((file) => {
+      formData.append("image", file.originFileObj);
+    });
+    setLoading(true);
+
+    try {
+      const res= await adds(formData).unwrap();
+      console.log(res)
+      setLoading(false);
+      message.success(res?.message);
+      setOpenAddModal(false);
+      setLoading(false);
+      form.resetFields();
+    } catch (error) {
+      message.error(` ${error?.data?.message}`);
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,65 +76,39 @@ const AddPromotionModal = ({ openAddModal, setOpenAddModal }) => {
           onFinish={handleSubmit}
           className="px-2"
         >
+            <Form.Item
+              label="URL"
+              name="url"
+              rules={[
+                { required: true, message: "Please input auction item name!" },
+              ]}
+            >
+              <Input placeholder="Enter auction item name" style={{ borderRadius: "0px", padding: "6px 8px" }} />
+            </Form.Item>
+          
           {/* Upload */}
           <label className="block font-medium mb-2 text-gray-700">
             Add Photo or video
           </label>
           <Upload
-            action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-            listType="picture-card"
-            fileList={fileList}
-            onChange={onChange}
-            onPreview={onPreview}
-            className="mb-4"
-          >
-            {fileList.length < 2 && (
-              <div>
-                <PlusOutlined />
-              </div>
-            )}
-          </Upload>
+              listType="picture-card"
+              fileList={fileList}
+              onChange={onChange}
+              onPreview={onPreview}
+              multiple={true}
+            >
+              {fileList.length < 1 && "+ Upload"}
+            </Upload>
 
-          {/* Date, Time, Duration */}
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            <Form.Item name="date" className="mb-0">
-              <DatePicker
-                placeholder="Enter Date"
-                className="w-full"
-                style={{ height: 40 }}
-              />
-            </Form.Item>
-            <Form.Item name="time" className="mb-0">
-              <TimePicker
-                placeholder="Enter time"
-                className="w-full"
-                style={{ height: 40 }}
-              />
-            </Form.Item>
-            <Form.Item name="duration" className="mb-0">
-              <Input
-                placeholder="3h 45m"
-                className="w-full"
-                style={{ height: 40 }}
-              />
-            </Form.Item>
-          </div>
-
-          {/* Description */}
-          <Form.Item name="description" label="Description">
-            <Input.TextArea
-              rows={3}
-              placeholder="Write description"
-              className="bg-gray-100"
-            />
-          </Form.Item>
+          
 
           {/* Save Button */}
           <button
             type="submit"
+            disabled={loading}
             className="w-full py-2 mt-2 bg-[#495F48] text-white rounded-md"
           >
-            Save
+            {loading ? <Spin size="small" /> : "Add"}
           </button>
         </Form>
       </div>

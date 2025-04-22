@@ -3,12 +3,15 @@ import { Avatar, Upload, Form, Input, Button, message } from "antd";
 import { IoCameraOutline } from "react-icons/io5";
 import { PasswordTab } from "./PasswordTab";
 import Navigate from "../../Navigate";
+import { useGetProfileQuery } from "../redux/api/userApi";
 
 
 
 
 const Profile = () => {
   const [profilePic, setProfilePic] = useState(null);
+  const {data:adminProfile} = useGetProfileQuery()
+  console.log(adminProfile)
   const [activeTab, setActiveTab] = useState("1");
 
   const [form] = Form.useForm();

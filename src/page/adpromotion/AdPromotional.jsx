@@ -9,7 +9,7 @@ import Navigate from "../../Navigate";
 
 const AdPromotional = () => {
   const [selectedTab, setSelectedTab] = useState("personal");
-  const [editModal, setEditModal] = useState(false);
+ 
   const [openAddModal, setOpenAddModal] = useState(false);
   return (
     <div className="p-1 h-screen">
@@ -28,15 +28,14 @@ const AdPromotional = () => {
       </div>
     
      
-          <Adds setEditModal={setEditModal}></Adds>
+          <Adds ></Adds>
       
       
 
 
       <AddPromotionModal setOpenAddModal={setOpenAddModal}
         openAddModal={openAddModal}></AddPromotionModal>
-        <EditPromotionModal  editModal={editModal}
-        setEditModal={setEditModal}></EditPromotionModal>
+        
     </div>
   );
 };

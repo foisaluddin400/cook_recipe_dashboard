@@ -16,7 +16,7 @@ const useApi = baseApi.injectEndpoints({
     getProfile: builder.query({
       query: () => {
         return {
-          url: "/admin/profile",
+          url: "/auth/admin-profile",
           method: "GET",
         };
       },
@@ -34,17 +34,28 @@ const useApi = baseApi.injectEndpoints({
     verifyOtp: builder.mutation({
       query: (data) => {
         return {
-          url: "/auth/recovery-verification",
+          url: "/auth/verify-otp",
           method: "POST",
           body: data,
         };
       },
     }),
-    resetPassword: builder.mutation({
+
+    resentVerifyOtp: builder.mutation({
       query: (data) => {
         return {
-          url: "/auth/reset-password",
-          method: "PUT",
+          url: "/auth/forgot-resend",
+          method: "POST",
+          body: data,
+        };
+      },
+    }),
+
+    resetPassword: builder.mutation({
+      query: ({data,email}) => {
+        return {
+          url: `/auth/reset-password?email=${email}`,
+          method: "POST",
           body: data,
         };
       },
@@ -52,7 +63,7 @@ const useApi = baseApi.injectEndpoints({
     updateProfile: builder.mutation({
       query: (data) => {
         return {
-          url: "/admin/edit-profile",
+          url: "/auth/edit-admin-profile",
           method: "PATCH",
           body: data,
         };
@@ -100,4 +111,5 @@ export const {
   useChangePasswordMutation,
   useGetAdminAllUserQuery,
   useBlockUserMutation,
+  useResentVerifyOtpMutation
 } = useApi;
