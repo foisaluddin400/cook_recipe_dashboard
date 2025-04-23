@@ -35,6 +35,16 @@ const route = baseApi.injectEndpoints({
         providesTags: ["updateProfile"],
       }),
 
+      getGrowth: builder.query({
+        query: (selectedYear) => {
+          return {
+            url: `/dashboard/get_user_growth?year=${selectedYear}`,
+            method: "GET",
+          };
+        },
+        providesTags: ["updateProfile"],
+      }),
+
     getTransection: builder.query({
         query: ({searchTerm,page, limit}) => {
           return {
@@ -93,7 +103,7 @@ export const {
   useGetContactQuery,
   useGetDashboardCountQuery,
   useGetUserGrowthQuery,
- 
+ useGetGrowthQuery
 
  
 } = route;

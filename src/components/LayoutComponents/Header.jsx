@@ -17,6 +17,8 @@ import logo from "../../assets/header/logo.png";
 import { FaChevronRight } from "react-icons/fa";
 
 import { IoIosLogIn } from "react-icons/io";
+import { useGetProfileQuery } from "../../page/redux/api/userApi";
+import { imageUrl } from "../../page/redux/api/baseApi";
 
 const items = [
   {
@@ -95,6 +97,8 @@ const Header = () => {
   const [selectedKey, setSelectedKey] = useState("dashboard");
   const [expandedKeys, setExpandedKeys] = useState([]);
   const navigate = useNavigate();
+
+   const {data:adminProfile} = useGetProfileQuery()
  
 
   const contentRef = useRef({});
@@ -264,14 +268,14 @@ const Header = () => {
             <div className="flex gap-3">
               <div>
                 <img
-                  className="w-[45px] h-[45px]"
-                  src={profilee}
+                  className="w-[45px] h-[45px] rounded-full"
+                  src={`${imageUrl}/${adminProfile?.data?.profile_image}`}
                   alt="profile"
                 />
               </div>
               <div className="text-end">
-                <h3>{ "Loading..."}</h3>
-                <h4 className="text-sm">Admin</h4>
+                <h3>{adminProfile?.data?.name}</h3>
+                <h4 className="text-sm">{adminProfile?.data?.authId?.role}</h4>
               </div>
             </div>
           </Link>

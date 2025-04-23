@@ -1,28 +1,29 @@
 import React, { useState } from 'react'
 import { Select } from 'antd'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useGetGrowthQuery } from '../../page/redux/api/routeApi';
 
 const UserGrowth = () => {
-  const [year, setYear] = useState("2023");
+  const [selectedYear, setSelectedYear] = useState("2025");
+  const {data:userGrowth} = useGetGrowthQuery(selectedYear)
+  console.log(userGrowth)
+  
   const items = [
+    { value: '2025', label: '2025' },
+    { value: '2024', label: '2024' },
     { value: '2023', label: '2023' },
-    { value: '2022', label: '2022' },
-    { value: '2021', label: '2021' }
+    { value: '2022', label: '2022' }
   ];
 
   const handleYearChange = (value) => {
-    setYear(value);
+    setSelectedYear(value); 
   };
 
-  const chartData = [
-    { name: 'January', uv: 4000, pv: 2400 },
-    { name: 'February', uv: 3000, pv: 1398 },
-    { name: 'March', uv: 2000, pv: 9800 },
-    { name: 'April', uv: 2780, pv: 3908 },
-    { name: 'May', uv: 1890, pv: 4800 },
-    { name: 'June', uv: 2390, pv: 3800 },
-    { name: 'July', uv: 3490, pv: 4300 },
-  ];
+
+  const chartData = userGrowth?.data?.data?.map(item => ({
+    month: item.month,
+    value: item.count, 
+  })) || []; 
 
   return (
     <div>
@@ -30,7 +31,7 @@ const UserGrowth = () => {
         <div className="flex justify-between p-3 ">
           <p className="text-xl font-medium">User Growth</p>
           <Select
-            defaultValue={year}
+            defaultValue={selectedYear}
             onChange={handleYearChange}
             style={{ width: 120 }}
             options={items}
@@ -38,18 +39,19 @@ const UserGrowth = () => {
         </div>
         <div className="w-full h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={chartData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              barSize={13}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="uv" stackId="a" fill="#495F48" radius={[25, 25, 0, 0]} />
-            </BarChart>
+          <BarChart
+  data={chartData}
+  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+  barSize={13}
+>
+  <CartesianGrid strokeDasharray="3 3" />
+  <XAxis dataKey="month" /> {/* ekhane month */}
+  <YAxis />
+  <Tooltip />
+  <Legend />
+  <Bar dataKey="value" stackId="a" fill="#495F48" radius={[25, 25, 0, 0]} /> {/* ekhane value */}
+</BarChart>
+
           </ResponsiveContainer>
         </div>
       </div>

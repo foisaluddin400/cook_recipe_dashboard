@@ -27,25 +27,26 @@ const UserManagement = () => {
       userName: user?.name,
       email: user?.email,
       contactNumber: user?.phone_number,
+      isBlock:user?.authId?.is_block,
       address: `${user?.shipping_address?.street_address}, ${user?.shipping_address?.city}, ${user?.shipping_address?.state}, ${user?.shipping_address?.zip_code}`,
       status: user?.status,
     })) || [];
 
     const handleBlockUnblock = async (record) => {
-      data = {
-        email:record.email
-        
+      console.log(record)
+     const data = {
+        email:record.email,
+        role:'USER',
+        is_block: !record.isBlock,
       }
-      setLoadingId(record.key);
+
+      console.log(data)
       try {
-        const response = await blockUser(record.key).unwrap();
-        if (response) {
-          message.success(response?.message);
-        }
-      } catch (error) {
-        message.error(error?.data?.message);
-      }
-      setLoadingId(null);
+           const res = await blockUser(data).unwrap(); 
+           message.success(res?.message);
+         } catch (error) {
+           message.error(error?.data?.message || 'Error deleting FAQ');
+         }
     };
 
   const columns = [
@@ -71,18 +72,11 @@ const UserManagement = () => {
           >
             <FaRegEye />
           </button>
-          <button
-            // onClick={() => handleBlockUnblock(record)}
-            className={
-              "bg-[#BBC5AA] text-white w-[30px] h-[30px] flex justify-center text-xl items-center rounded-md"
-            }
-          >
-            <LiaReplySolid />
-          </button>
+         
           <button
             onClick={() => handleBlockUnblock(record)}
             className={`${
-              record.status === "Banned" ? "bg-[#8C9480]" : "bg-gray-600"
+              record.isBlock === true ? "bg-red-600" : "bg-[#495F48]"
             } text-white w-[30px] h-[30px] flex justify-center text-xl items-center rounded-md`}
             disabled={loadingId === record.key}
           >

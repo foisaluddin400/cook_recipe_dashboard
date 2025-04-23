@@ -70,6 +70,8 @@ const useApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
+
+
     changePassword: builder.mutation({
       query: (data) => {
         return {

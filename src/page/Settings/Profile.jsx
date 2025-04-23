@@ -3,21 +3,32 @@ import { Avatar, Upload, Form, Input, Button, message } from "antd";
 import { IoCameraOutline } from "react-icons/io5";
 import { PasswordTab } from "./PasswordTab";
 import Navigate from "../../Navigate";
-import { useGetProfileQuery } from "../redux/api/userApi";
+import { useGetProfileQuery, useUpdateProfileMutation } from "../redux/api/userApi";
+import { imageUrl } from "../redux/api/baseApi";
 
 
 
 
 const Profile = () => {
   const [profilePic, setProfilePic] = useState(null);
+  const [updateProfile] = useUpdateProfileMutation()
   const {data:adminProfile} = useGetProfileQuery()
-
+console.log(adminProfile)
   const [activeTab, setActiveTab] = useState("1");
 
   const [form] = Form.useForm();
   const [image, setImage] = useState();
 
-
+  useEffect(() => {
+    if (adminProfile?.data) {
+      form.setFieldsValue({
+        name: adminProfile?.data?.name,
+        email: adminProfile?.data?.email,
+        address: adminProfile?.data?.address || 'No Address',
+        phone_number: adminProfile?.data?.phone_number,
+      });
+    }
+  }, [adminProfile, form]);
   
 
   const handleImageChange = (e) => {
@@ -28,7 +39,17 @@ const Profile = () => {
   
 
   const handleProfileUpdate = async (values) => {
-   
+    const data = new FormData();
+    if (image) data.append("profile_image", image);
+    data.append("name", values.name);
+    data.append("address", values.address);
+    data.append("phone_number", values.phone_number);
+     try {
+         const response = await updateProfile(data).unwrap(); 
+         message.success(response?.message);
+       } catch (error) {
+         message.error(error?.data?.message );
+       }
    
   };
 
@@ -42,27 +63,17 @@ const Profile = () => {
           form={form}
           onFinish={handleProfileUpdate} 
         >
-          <h2 className="text-xl font-semibold mb-4 text-center">
-            Edit Your Profile
-          </h2>
+        
           <Form.Item
-            name="first"
-            label="First Name"
+            name="name"
+            label="Name"
             rules={[
-              { required: true, message: "Please enter your first name!" },
+              { required: true, message: "Please enter your name!" },
             ]}
           >
-            <Input className="py-2" placeholder="First Name" />
+            <Input className="py-2" placeholder="Name" />
           </Form.Item>
-          <Form.Item
-            name="last"
-            label="Last Name"
-            rules={[
-              { required: true, message: "Please enter your last name!" },
-            ]}
-          >
-            <Input className="py-2" placeholder="Last Name" />
-          </Form.Item>
+         
 
           <Form.Item
             name="email"
@@ -73,13 +84,23 @@ const Profile = () => {
           </Form.Item>
 
           <Form.Item
-            name="contactNo"
+            name="phone_number"
             label="Contact No."
             rules={[
               { required: true, message: "Please enter your contact number!" },
             ]}
           >
             <Input className="py-2" placeholder="Contact No" />
+          </Form.Item>
+
+          <Form.Item
+            name="address"
+            label="Address"
+            rules={[
+              { required: true, message: "Please enter your address!" },
+            ]}
+          >
+            <Input className="py-2" placeholder="Address" />
           </Form.Item>
 
           <Form.Item>
@@ -114,11 +135,11 @@ const Profile = () => {
             style={{ display: "none" }}
           />
           <img
-            style={{ width: 140, height: 140, borderRadius: "100%" }}
+            className="w-[140px] h-[140px] rounded-full object-cover"
             src={`${
               image
                 ? URL.createObjectURL(image)
-                : `ff`
+                : `${imageUrl}${adminProfile?.data?.profile_image}`
             }`}
             alt="Admin Profile"
           />
@@ -132,8 +153,8 @@ const Profile = () => {
           )}
         </div>
 
-        <p className="text-lg font-semibold mt-4">
-          name
+        <p className="text-lg font-semibold mt-8">
+        {adminProfile?.data?.name}
         </p>
       </div>
 

@@ -59,7 +59,7 @@ const ShopRegistration = () => {
         <div className="p-3 bg-white mt-4">
                   <div className="flex justify-between items-center">
                 <h2 className="text-lg font-semibold pb-2">Shops Registration</h2>
-                <button className="text-[#AB684D]">View all</button>
+                <Link to={'/dashboard/UserManagement'}><button className="text-[#AB684D]">View all</button></Link>
             </div>
 
 
