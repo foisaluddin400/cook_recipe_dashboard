@@ -69,7 +69,7 @@ export const AddSubscriptionModal = ({ openAddModal, setOpenAddModal }) => {
           >
             <Select
               placeholder="Duration"
-              optionFilterProp="label"
+              
               options={[
                 { value: "Monthly", label: "Monthly" },
                 { value: "Weekly", label: "Weekly" },

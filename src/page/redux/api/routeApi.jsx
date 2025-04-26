@@ -76,6 +76,16 @@ const route = baseApi.injectEndpoints({
         invalidatesTags: ["updateProfile"],
       }),
 
+      addRecipe: builder.mutation({
+        query: (data) => {
+          return {
+            url: "/dashboard/create_recipe",
+            method: "POST",
+            body: data,
+          };
+        },
+        invalidatesTags: ["updateProfile"],
+      }),
       
     updateSubscription: builder.mutation({
         query: ({data,id}) => {
@@ -103,7 +113,8 @@ export const {
   useGetContactQuery,
   useGetDashboardCountQuery,
   useGetUserGrowthQuery,
- useGetGrowthQuery
+ useGetGrowthQuery,
+ useAddRecipeMutation
 
  
 } = route;
