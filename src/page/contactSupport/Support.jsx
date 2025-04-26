@@ -13,8 +13,11 @@ const Support = () => {
   const [searchTerm, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-  const {data:contactSupport} = useGetContactQuery({searchTerm, page: currentPage,
-    limit: pageSize,})
+  const { data: contactSupport } = useGetContactQuery({
+    searchTerm,
+    page: currentPage,
+    limit: pageSize,
+  });
   const [selectedShop, setSelectedShop] = useState(null);
   const [openAddModal, setOpenAddModal] = useState(false);
   // const dataSource = [
@@ -40,15 +43,15 @@ const Support = () => {
   // ];
 
   const dataSource =
-  contactSupport?.data?.data?.map((sub, index) => ({
-    key: sub?._id,
-    sl: index + 1,
-    name: sub?.name,
-    email: sub?.email,
-    subject: sub?.subject,
-    message: sub?.message,
-    createdAt: new Date(sub?.createdAt).toLocaleString()
-  })) || [];
+    contactSupport?.data?.data?.map((sub, index) => ({
+      key: sub?._id,
+      sl: index + 1,
+      name: sub?.name,
+      email: sub?.email,
+      subject: sub?.subject,
+      message: sub?.message,
+      createdAt: new Date(sub?.createdAt).toLocaleString(),
+    })) || [];
 
   const columns = [
     {
@@ -77,7 +80,7 @@ const Support = () => {
       dataIndex: "message",
       key: "message",
     },
-    
+
     {
       title: "View Details",
       key: "viewDetails",
@@ -97,7 +100,6 @@ const Support = () => {
     //   title: "Reply",
     //   key: "reply",
     //   render: (record) => (
-  
 
     //       <button
     //       onClick={() => setOpenAddModal(true)}
@@ -129,15 +131,14 @@ const Support = () => {
       <Table dataSource={dataSource} columns={columns} pagination={false} />
 
       <div className="mt-4 flex justify-center">
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={contactSupport?.data?.meta?.total || 0}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-            
-          />
-        </div>
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={contactSupport?.data?.meta?.total || 0}
+          onChange={handlePageChange}
+          showSizeChanger={false}
+        />
+      </div>
 
       <Modal
         title="Details"
@@ -157,13 +158,11 @@ const Support = () => {
               <strong>Email:</strong> {selectedShop.email}
             </p>
             <p>
-              <strong>Subject:</strong>{" "}
-              {selectedShop.subject}
+              <strong>Subject:</strong> {selectedShop.subject}
             </p>
             <p>
               <strong>Message:</strong> {selectedShop.message}
             </p>
-       
           </div>
         )}
       </Modal>
