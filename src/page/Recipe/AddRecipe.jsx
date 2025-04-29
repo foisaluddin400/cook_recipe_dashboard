@@ -82,7 +82,7 @@ const AddRecipe = () => {
 
       // setLoading(false);
       message.success(res?.message);
-      setOpenAddModal(false);
+      // setOpenAddModal(false);
       // setLoading(false);
       form.resetFields();
     } catch (error) {
@@ -209,7 +209,7 @@ const AddRecipe = () => {
                 <Input />
               </Form.Item>
 
-              <Form.List name="ingredients">
+              <Form.List name="ingredients" >
                 {(fields, { add, remove }) => (
                   <>
                     <div className="pb-2">Ingredients</div>
@@ -251,72 +251,78 @@ const AddRecipe = () => {
                   { required: true, message: "Please input serving size" },
                 ]}
               >
-                <Input />
+                <Input type="number"/>
               </Form.Item>
+              <h1 className="pb-3">Nutritional Information per Serving</h1>
 
               <Form.Item
                 label="calories"
                 name="calories"
+                layout="horizontal"
                 rules={[
                   { required: true, message: "Please input nutritional" },
                 ]}
               >
                 <div className="space-y-3">
                   <span className="flex items-center gap-3">
-                    calories <Input />
+                    <Input type="number"/>
                   </span>
                 </div>
               </Form.Item>
               <Form.Item
                 label="protein"
                 name="protein"
+                layout="horizontal"
                 rules={[
                   { required: true, message: "Please input nutritional" },
                 ]}
               >
                 <div className="space-y-3">
                   <span className="flex items-center gap-3">
-                    protein <Input />
+                    <Input type="number"/>
                   </span>
                 </div>
               </Form.Item>
               <Form.Item
                 label="carbs"
                 name="carbs"
+                layout="horizontal"
                 rules={[
                   { required: true, message: "Please input nutritional" },
                 ]}
               >
                 <div className="space-y-3">
                   <span className="flex items-center gap-3">
-                    carbs <Input />
+                    <Input type="number"/>
                   </span>
                 </div>
               </Form.Item>
 
               <Form.Item
-                label="fat"
+               label="Carbs"
                 name="fat"
+                layout="horizontal"
                 rules={[
                   { required: true, message: "Please input nutritional" },
                 ]}
               >
                 <div className="space-y-3">
                   <span className="flex items-center gap-3">
-                    fat <Input />
+                   <Input type="number"/>
                   </span>
                 </div>
               </Form.Item>
               <Form.Item
-                label="fiber"
+                label="Fiber"
                 name="fiber"
+                  layout="horizontal"
                 rules={[
                   { required: true, message: "Please input nutritional" },
                 ]}
               >
                 <div className="space-y-3">
                   <span className="flex items-center gap-3">
-                    fiber <Input />
+                   <Input type="number"/>
                   </span>
                 </div>
               </Form.Item>
@@ -329,7 +335,7 @@ const AddRecipe = () => {
                 name="prep_time"
                 rules={[{ required: true, message: "Please input prep_time" }]}
               >
-                <Input />
+                <Input type="number"/>
               </Form.Item>
 
               <Form.Item
@@ -356,7 +362,7 @@ const AddRecipe = () => {
               
               </Form.Item>
 
-              <Form.Item label="Serving Temp" name="serving_temperature">
+              <Form.Item label="Serving Temp" name="serving_temperature" rules={[{ required: true, message: "Please select food type" }]}>
                 <Radio.Group
                   options={[
                     { value: "Cold", label: "Cold" },
@@ -365,11 +371,11 @@ const AddRecipe = () => {
                 />
               </Form.Item>
               <Form.Item
-                label="Kid"
+                
                 name="kid_approved"
                 valuePropName="checked"
               >
-                <Checkbox>Checkbox</Checkbox>
+                <Checkbox>Kid-Friendly</Checkbox>
               </Form.Item>
 
               <Upload
@@ -379,7 +385,7 @@ const AddRecipe = () => {
                 onPreview={onPreview}
                 multiple={true}
               >
-                {fileList.length < 2 && "+ Upload"}
+                {fileList.length < 1 && "+ Upload"}
               </Upload>
             </div>
           </div>

@@ -24,6 +24,7 @@ import Recipe from "../page/Recipe/Recipe";
 import AddRecipe from "../page/Recipe/AddRecipe";
 import EditRecipe from "../page/Recipe/EditRecipe";
 import ProtectedRoute from "../protectedRoute/ProtectedRoute";
+import RecipeDetailsPage from "../page/Recipe/RecipeDetailsPage";
 
 
 export const router = createBrowserRouter([
@@ -50,11 +51,15 @@ export const router = createBrowserRouter([
         element: <Recipe></Recipe>
       },
       {
+        path: "/dashboard/recipe/recipeDetails/:id",
+        element: <RecipeDetailsPage></RecipeDetailsPage>
+      },
+      {
         path: "/dashboard/recipe/addRecipe",
         element: <AddRecipe></AddRecipe>
       },
       {
-        path: "/dashboard/recipe/editRecipe",
+        path: "/dashboard/recipe/editRecipe/:id",
         element: <EditRecipe></EditRecipe>
       },
       {

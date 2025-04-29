@@ -4,6 +4,7 @@ import {
   ConfigProvider,
   Form,
   Input,
+  message,
   Radio,
   Select,
   Space,
@@ -12,38 +13,80 @@ import {
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import Navigate from "../../Navigate";
+import { useParams } from "react-router-dom";
+import {
+  useGetRecipeDetailsQuery,
+  useUpdateRecipeMutation,
+} from "../redux/api/routeApi";
+import { imageUrl } from "../redux/api/baseApi";
 
 const EditRecipe = () => {
+  const { id } = useParams();
+  const {
+    data: recipe,
+    isLoading,
+    isError,
+  } = useGetRecipeDetailsQuery({ id }, { refetchOnMountOrArgChange: true });
+  console.log(recipe);
+  const [updateRecipe] = useUpdateRecipeMutation();
   const [form] = Form.useForm();
 
-  const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ]);
+  const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
-  const onPreview = (file) =>
-    __awaiter(void 0, void 0, void 0, function* () {
-      let src = file.url;
-      if (!src) {
-        src = yield new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file.originFileObj);
-          reader.onload = () => resolve(reader.result);
-        });
-      }
-      const image = new Image();
-      image.src = src;
-      const imgWindow = window.open(src);
-      imgWindow === null || imgWindow === void 0
-        ? void 0
-        : imgWindow.document.write(image.outerHTML);
-    });
+
+  useEffect(() => {
+    if (recipe) {
+      form.setFieldsValue({
+        name: recipe?.data?.name,
+        category: recipe?.data?.category,
+        prep: recipe?.data?.prep,
+        weight_and_muscle: recipe?.data?.weight_and_muscle,
+        flavor: recipe?.data?.flavor,
+        holiday_recipes: recipe?.data?.holiday_recipes,
+        instructions: recipe?.data?.instructions,
+        ingredients: recipe?.data?.ingredients?.map((item) => ({
+          value: item,
+        })),
+        serving_size: recipe?.data?.serving_size,
+        calories: recipe?.data?.nutritional?.calories,
+        protein: recipe?.data?.nutritional?.protein,
+        carbs: recipe?.data?.nutritional?.carbs,
+        fat: recipe?.data?.nutritional?.fat,
+        fiber: recipe?.data?.nutritional?.fiber,
+        prep_time: recipe?.data?.prep_time,
+        oils: recipe?.data?.oils,
+        whole_food_type: recipe?.data?.whole_food_type,
+        serving_temperature: recipe?.data?.serving_temperature,
+        kid_approved: recipe?.data?.kid_approved,
+      });
+
+      setFileList([
+        {
+          uid: "-1",
+          name: "category-image.png",
+          status: "done",
+          url: `${imageUrl}/${recipe?.data?.image}`,
+        },
+      ]);
+    }
+  }, [recipe, form]);
+
+  const onPreview = async (file) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
 
   useEffect(() => {
     form.setFieldsValue({ cooking: [""] });
@@ -57,519 +100,365 @@ const EditRecipe = () => {
     form.setFieldsValue({ nutrition: [""] });
   }, [form]);
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    const id = recipe?.data?._id;
+    const existingImages = fileList.filter((file) => file.url);
+    const newImages = fileList.filter((file) => file.originFileObj);
+    console.log(id);
+    console.log(values);
+    const formData = new FormData();
+    formData.append("name", values?.name);
+    formData.append("category", values?.category);
+    const nutritional = {
+      calories: values?.calories,
+      protein: values?.protein,
+      carbs: values?.carbs,
+      fat: values?.fat,
+      fiber: values?.fiber,
+    };
+    console.log("nutri", nutritional);
+    //recipe_tips
+    //no weekend prep
+    formData.append("nutritional", JSON.stringify(nutritional));
 
+    formData.append("weight_and_muscle", values?.weight_and_muscle);
+    formData.append("kid_approved", values?.kid_approved);
+    formData.append("flavor", values?.flavor);
+    formData.append("ingredients", JSON.stringify(values?.ingredients.map(item => item.value)));
+    formData.append("prep", values?.prep);
+    formData.append("holiday_recipes", values?.holiday_recipes);
+    formData.append("instructions", values?.instructions);
+    formData.append("serving_size", Number(values?.serving_size));
+    formData.append("prep_time", values?.prep_time);
+    formData.append("oils", values?.oils);
+    formData.append("whole_food_type", values?.whole_food_type);
+    formData.append("serving_temperature", values?.serving_temperature);
+
+    if (newImages.length > 0) {
+      newImages.forEach((file) => {
+        formData.append("image", file.originFileObj);
+      });
+    } else {
+      formData.append("image", recipe?.data?.image);
+    }
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+    // setLoading(true);
+
+    try {
+      const res = await updateRecipe({ data: formData, id }).unwrap();
+
+      // setLoading(false);
+      message.success(res?.message);
+      // setOpenAddModal(false);
+      // setLoading(false);
+      form.resetFields();
+    } catch (error) {
+      message.error(` ${error?.data?.message}`);
+      // setLoading(false);
+    }
   };
 
-  const onFinishFailed = (errorInfo) => {
-   
-  };
+  const onFinishFailed = (errorInfo) => {};
 
   return (
     <div className="p-1">
-        <Navigate title={"Edit Recipe"}></Navigate>
-        <div id="recipe" className="p-5 mt-4 bg-white h-screen">
-      <Form
-        form={form}
-        name="dynamic_form"
-        onFinish={onFinish}
-        layout="vertical"
-        onFinishFailed={onFinishFailed}
-      >
-        <div className="grid grid-cols-3 gap-11">
-          <div>
-            <Form.Item
-              label="Recipe Nam"
-              name="name"
-              rules={[
-                { required: true, message: "Please input auction item name!" },
-              ]}
-            >
-              <Input placeholder="Enter auction item name" style={{ borderRadius: "0px", padding: "6px 8px" }} />
-            </Form.Item>
-
-            <Form.Item
-              label="Meal Type"
-              name="mealType"
-              rules={[
-                { required: true, message: "Please input your meal type" },
-              ]}
-            >
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Select: {
-                      activeBorderColor: "rgb(250,59,59)",
-                      borderRadius: 0,
-                     
-                    },
-                  },
-                }}
+      <Navigate title="Add Recipe" />
+      <div id="recipe" className="p-5 mt-4 bg-white h-screen">
+        <Form
+          form={form}
+          name="dynamic_form"
+          onFinish={onFinish}
+          layout="vertical"
+        >
+          <div className="grid grid-cols-3 gap-11">
+            <div>
+              <Form.Item
+                label="Recipe Name"
+                name="name"
+                rules={[
+                  { required: true, message: "Please input recipe name!" },
+                ]}
               >
-                <Select
-                
-                  labelInValue
-                  defaultValue={{ value: "Meal Type", label: "Meal Type" }}
+                <Input placeholder="Enter recipe name" />
+              </Form.Item>
+
+              <Form.Item
+                label="Meal Type"
+                name="category"
+                rules={[{ required: true, message: "Please select meal type" }]}
+              >
+                <Select placeholder={"Select Event Type"}>
+                  <Select.Option value="breakfast">Breakfast</Select.Option>
+                  <Select.Option value="lunches-and-dinners">
+                    Lunch
+                  </Select.Option>
+                  <Select.Option value="appetizers">Dinner</Select.Option>
+                  <Select.Option value="salads">Appetizers</Select.Option>
+                  <Select.Option value="sides">Sides</Select.Option>
+                  <Select.Option value="desserts">desserts</Select.Option>
+                  <Select.Option value="smoothies/shakes">
+                    smoothies/shakes
+                  </Select.Option>
+                  <Select.Option value="soups">Soup</Select.Option>
+                  <Select.Option value="salad-dressings">
+                    salad-dressings
+                  </Select.Option>
+                  <Select.Option value="jams/marmalades">
+                    jams/marmalades
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Weight Goal"
+                name="weight_and_muscle"
+                rules={[
+                  { required: true, message: "Please select weight goal" },
+                ]}
+              >
+                <Select placeholder="Select Event Type">
+                  <Select.Option value="weight_loss">Weight Loss</Select.Option>
+                  <Select.Option value="muscle_gain">Muscle Gain</Select.Option>
+                  <Select.Option value="maintain_weight">
+                    maintain weight
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+
+              {/* <Form.Item
+              label="Serving Size"
+              name="serving_size"
+              rules={[
+                { required: true, message: "Please input serving size" },
+              ]}
+            >
+              <Input />
+            </Form.Item> */}
+
+              <Form.Item
+                label="Flavour Type"
+                name="flavor"
+                rules={[
+                  { required: true, message: "Please select flavour type" },
+                ]}
+              >
+                <Select placeholder="Select Event Type">
+                  <Select.Option value="Sweet">Sweet</Select.Option>
+                  <Select.Option value="Savory">Savory</Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Prep Instructions"
+                name="prep"
+                rules={[{ required: true, message: "Please input prep steps" }]}
+              >
+                <Input.TextArea />
+              </Form.Item>
+            </div>
+
+            {/* Middle Column */}
+            <div>
+              <Form.Item
+                label="Ethnic/Holiday Recipes"
+                name="holiday_recipes"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select a recipe category",
+                  },
+                ]}
+              >
+                <Select placeholder="Select Event Type">
+                  <Select.Option value="arabic">Arabic</Select.Option>
+                  <Select.Option value="bbq">Backyard BBQ</Select.Option>
+                  <Select.Option value="christmas">Christmas</Select.Option>
+                  <Select.Option value="french">French</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Cooking Instruction"
+                name="instructions"
+                rules={[
+                  { required: true, message: "Please input instructions" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.List name="ingredients">
+                {(fields, { add, remove }) => (
+                  <>
+                    <div className="pb-2">Ingredients</div>
+                    {fields.map((field) => (
+                      <div key={field.key} className="grid grid-cols-12 mb-2">
+                        <Form.Item
+                          {...field}
+                          name={[field.name, "value"]} // <-- fix here
+                          className="col-span-11"
+                          rules={[{ required: true, message: "Required" }]}
+                        >
+                          <Input placeholder="Enter ingredient" />
+                        </Form.Item>
+                        {fields.length > 1 && (
+                          <MinusCircleOutlined
+                            onClick={() => remove(field.name)}
+                            className="ml-5 text-red-500"
+                          />
+                        )}
+                      </div>
+                    ))}
+                    <Form.Item>
+                      <Button
+                        onClick={() => add()}
+                        block
+                        icon={<PlusOutlined />}
+                      >
+                        Add Ingredient
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+
+              <Form.Item
+                label="Serving Size"
+                name="serving_size"
+                rules={[
+                  { required: true, message: "Please input serving size" },
+                ]}
+              >
+                <Input type="number" />
+              </Form.Item>
+              <h1 className="pb-3">Nutritional Information per Serving</h1>
+
+              <Form.Item
+                label="Calories"
+                name="calories"
+                layout="horizontal"
+                rules={[{ required: true, message: "Please input calories" }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+
+              <Form.Item
+                label="Protein"
+                name="protein"
+                layout="horizontal"
+                rules={[{ required: true, message: "Please input protein" }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+
+              <Form.Item
+                label="Carbs"
+                name="carbs"
+                layout="horizontal"
+                rules={[{ required: true, message: "Please input carbs" }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+
+              <Form.Item
+                label="Fat"
+                name="fat"
+                layout="horizontal"
+                rules={[{ required: true, message: "Please input fat" }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+
+              <Form.Item
+                label="Fiber"
+                name="fiber"
+                layout="horizontal"
+                rules={[{ required: true, message: "Please input fiber" }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            </div>
+
+            {/* Right Column */}
+            <div>
+              <Form.Item
+                label="Preparation time"
+                name="prep_time"
+                rules={[{ required: true, message: "Please input prep_time" }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+
+              <Form.Item
+                label="Oils"
+                name="oils"
+                rules={[{ required: true, message: "Please select oil type" }]}
+              >
+                <Select placeholder="Select Event Type">
+                  <Select.Option value="oil_free">Oil Free</Select.Option>
+                  <Select.Option value="with_oil">With Oil</Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Whole Food Type"
+                name="whole_food_type"
+                rules={[{ required: true, message: "Please select food type" }]}
+              >
+                <Select placeholder="Select Event Type">
+                  <Select.Option value="plant_based">Plant Based</Select.Option>
+                  <Select.Option value="whole_food">Whole Food</Select.Option>
+                  <Select.Option value="paleo">Paleo</Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Serving Temp"
+                name="serving_temperature"
+                rules={[{ required: true, message: "Please select food type" }]}
+              >
+                <Radio.Group
                   options={[
-                    {
-                      value: "jack",
-                      label: "Meal Type",
-                    },
-                    {
-                      value: "lucyg",
-                      label: "Breakfast",
-                    },
-                    {
-                      value: "lucyg",
-                      label: "Lunch",
-                    },
-                    {
-                      value: "lucyuj",
-                      label: "Dinner",
-                    },
-                    {
-                      value: "l",
-                      label: "Appetizers",
-                    },
-                    {
-                      value: "lu",
-                      label: "Sides",
-                    },
-                    {
-                      value: "luc",
-                      label: "Soup",
-                    },
+                    { value: "Cold", label: "Cold" },
+                    { value: "Hot", label: "Hot" },
                   ]}
                 />
-              </ConfigProvider>
-            </Form.Item>
+              </Form.Item>
+              <Form.Item name="kid_approved" valuePropName="checked">
+                <Checkbox>Kid-Friendly</Checkbox>
+              </Form.Item>
 
-            <Form.Item
-              label="Weight Loss vs.MuscleGain"
-              name="Weight"
-              rules={[
-                { required: true, message: "Please input Weight Loss vs.MuscleGain" },
-              ]}
-            >
-               <ConfigProvider
-                theme={{
-                  components: {
-                    Select: {
-                      
-                      borderRadius: 0,
-                      lineHeight:2
-                     
-                    },
-                  },
-                }}
+              <Upload
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                onPreview={onPreview}
+                multiple={true}
               >
-              <Select
-                labelInValue
-                defaultValue={{ value: "Weight Loss vs.MuscleGain", label: "Weight Loss vs.MuscleGain" }}
-                options={[
-                  {
-                    value: "jack",
-                    label: "Weight Loss vs.MuscleGain",
-                  },
-                  {
-                    value: "lucy",
-                    label: "Weight Loss",
-                  },
-                  {
-                    value: "lucdy",
-                    label: "Muscle Gain",
-                  },
-                ]}
-              /> </ConfigProvider>
-            </Form.Item>
+                {fileList.length < 1 && "+ Upload"}
+              </Upload>
+            </div>
+          </div>
 
-            <Form.Item
-              label="Serving Size"
-              name="serving"
-              rules={[
-                { required: true, message: "Please input Serving Size" },
-              ]}
-            >
-              <Input style={{ borderRadius: "0px", padding: "6px 8px" }} />
-            </Form.Item>
-
-            <Form.Item
-              label="Flavour Type"
-              name="mealType"
-              rules={[
-                { required: true, message: "Please input Flavor Type" },
-              ]}
-            >
-               <ConfigProvider
-                theme={{
-                  components: {
-                    Select: {
-                      activeBorderColor: "rgb(250,59,59)",
-                      borderRadius: 0,
-                     
-                    },
-                  },
-                }}
+          <Form.Item>
+            <div className="flex justify-center gap-5 mt-11">
+              <button
+                className="bg-[#495F48] px-16 py-3 text-white rounded"
+                type="submit"
               >
-              <Select
-                labelInValue
-                defaultValue={{ value: "Flavor Type", label: "Flavor Type" }}
-                options={[
-                  {
-                    value: "jack",
-                    label: "Sweet",
-                  },
-                  {
-                    value: "lucy",
-                    label: "Savory",
-                  },
-                ]}
-              /> </ConfigProvider>
-            </Form.Item>
-            <Form.Item
-              label="Prep"
-              name="prep"
-              rules={[
-                { required: true, message: "Please input Prep" },
-              ]}
-            >
-              <Input.TextArea
-                style={{ borderRadius: "0px", padding: "6px 8px" }}
-              />
-            </Form.Item>
-          </div>
-          <div>
-            <Form.Item
-              label="Ethnic/Holiday Recipes"
-              name="mealType"
-              rules={[
-                { required: true, message: "Please input Ethnic/Holiday Recipes" },
-              ]}
-            >
-               <ConfigProvider
-                theme={{
-                  components: {
-                    Select: {
-                      activeBorderColor: "rgb(250,59,59)",
-                      borderRadius: 0,
-                     
-                    },
-                  },
-                }}
+                Create
+              </button>
+              <button
+                className="bg-red-500 px-16 py-3 text-white rounded"
+                type="button"
               >
-              <Select
-                labelInValue
-                defaultValue={{ value: "Ethnic/Holiday Recipes", label: "Ethnic/Holiday Recipes" }}
-                options={[
-                  {
-                    value: "jack",
-                    label: "Arabic",
-                  },
-                  {
-                    value: "lucy",
-                    label: "Backyard BBQ",
-                  },
-                  {
-                    value: "ddlucy",
-                    label: "Christmas",
-                  },
-                  {
-                    value: "ldfucy",
-                    label: "French",
-                  },
-                ]}
-              /> </ConfigProvider>
-            </Form.Item>
-
-            <Form.List name="cooking">
-              {(fields, { add, remove }) => (
-                <>
-                <div className="pb-2">Cooking Instruction</div>
-                  {fields.map((field, index) => (
-                    <div
-                      key={field.key}
-                      style={{ marginBottom: 8 }}
-                      className="grid grid-cols-12"
-                      align="baseline"
-                    >
-                      <Form.Item
-                        className="w-full col-span-11"
-                        {...field}
-                        
-                        name={[field.name]}
-                        rules={[
-                          { required: true, message: "Please input an item!" },
-                        ]}
-                      >
-                        <Input
-                          
-                          defaultValue={index + 1}
-                          style={{ borderRadius: "0px", padding: "6px 8px" }}
-                        />
-                      </Form.Item>
-                      {fields.length > 1 && (
-                        <MinusCircleOutlined
-                          className="ml-5"
-                          onClick={() => remove(field.name)}
-                          style={{ color: "red" }}
-                        />
-                      )}
-                    </div>
-                  ))}
-                  <Form.Item>
-                    <Button
-                      style={{
-                        borderRadius: "0px",
-                        padding: "6px 8px",
-                        marginTop: "-0px",
-                      }}
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                    ></Button>
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
-
-            <Form.List name="ingredients">
-              {(fields, { add, remove }) => (
-                <>
-                <div className="pb-2">Ingredients List</div>
-                  {fields.map((field, index) => (
-                    <div
-                      key={field.key}
-                      style={{ marginBottom: 8 }}
-                      className="grid grid-cols-12"
-                      align="baseline"
-                    >
-                      <Form.Item
-                        className="w-full col-span-11"
-                        {...field}
-                        
-                        name={[field.name]}
-                        rules={[
-                          { required: true, message: "Please input an item!" },
-                        ]}
-                      >
-                        <Input
-                          placeholder="Enter item"
-                          style={{ borderRadius: "0px", padding: "6px 8px" }}
-                        />
-                      </Form.Item>
-                      {fields.length > 1 && (
-                        <MinusCircleOutlined
-                          className="ml-5"
-                          onClick={() => remove(field.name)}
-                          style={{ color: "red" }}
-                        />
-                      )}
-                    </div>
-                  ))}
-                  <Form.Item>
-                    <Button
-                      style={{
-                        borderRadius: "0px",
-                        padding: "6px 8px",
-                        marginTop: "-0px",
-                      }}
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                    ></Button>
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
-
-            <Form.List name="nutrition">
-              {(fields, { add, remove }) => (
-                <>
-                <div className="pb-2">Nutritional Information Per Serving</div>
-                  {fields.map((field, index) => (
-                    <div
-                      key={field.key}
-                      style={{ marginBottom: 8 }}
-                      className="grid grid-cols-12"
-                      align="baseline"
-                    >
-                      <Form.Item
-                        className="w-full col-span-11"
-                        {...field}
-                        
-                        name={[field.name]}
-                        rules={[
-                          { required: true, message: "Please input an item!" },
-                        ]}
-                      >
-                        <Input
-                          placeholder="Enter item"
-                          style={{ borderRadius: "0px", padding: "6px 8px" }}
-                        />
-                      </Form.Item>
-                      {fields.length > 1 && (
-                        <MinusCircleOutlined
-                          className="ml-5"
-                          onClick={() => remove(field.name)}
-                          style={{ color: "red" }}
-                        />
-                      )}
-                    </div>
-                  ))}
-                  <Form.Item>
-                    <Button
-                      style={{
-                        borderRadius: "0px",
-                        padding: "6px 8px",
-                        marginTop: "-0px",
-                      }}
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                    ></Button>
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
-          </div>
-          <div>
-            <Form.Item
-              label="Proparation time"
-              name="Proparation"
-              rules={[
-                { required: true, message: "Please input your Proparation!" },
-              ]}
-            >
-              <Input style={{ borderRadius: "0px", padding: "6px 8px" }} />
-            </Form.Item>
-
-            <Form.Item
-              label="Oils"
-              name="oils"
-              rules={[{ required: true, message: "Please input your Oils" }]}
-            >
-               <ConfigProvider
-                theme={{
-                  components: {
-                    Select: {
-                      activeBorderColor: "rgb(250,59,59)",
-                      borderRadius: 0,
-                     
-                    },
-                  },
-                }}
-              >
-              <Select
-                labelInValue
-                defaultValue={{ value: "oils", label: "Oils" }}
-                options={[
-                  {
-                    value: "Oils",
-                    label: "Oils",
-                  },
-                  {
-                    value: "Free",
-                    label: "Oil Free",
-                  },
-                  {
-                    value: "With",
-                    label: "With Oil",
-                  },
-                ]}
-              /> </ConfigProvider>
-            </Form.Item>
-
-            <Form.Item
-              label="Whole Food Type"
-              name="mealType"
-              rules={[
-                { required: true, message: "Please input Whole Food Type" },
-              ]}
-            > <ConfigProvider
-            theme={{
-              components: {
-                Select: {
-                  activeBorderColor: "rgb(250,59,59)",
-                  borderRadius: 0,
-                 
-                },
-              },
-            }}
-          >
-              <Select
-                labelInValue
-                defaultValue={{
-                  value: "wholefoodType",
-                  label: "Whole Food Type",
-                }}
-                options={[
-                  {
-                    value: "wholefoodType",
-                    label: "Whole Food Type",
-                  },
-                  {
-                    value: "plantBased",
-                    label: "Plant Based",
-                  },
-                  {
-                    value: "wholeFood",
-                    label: "Whole Food",
-                  },
-                  {
-                    value: "paleo",
-                    label: "Paleo",
-                  },
-                ]}
-              /> </ConfigProvider>
-            </Form.Item>
-
-            <Form.Item>
-              <Radio.Group
-                label="Serving Temperature"
-                name="radiogroup"
-                defaultValue={1}
-                options={[
-                  { value: 1, label: "Cold" },
-                  { value: 2, label: "Hot" },
-                ]}
-              />
-            </Form.Item>
-            <Form.Item>
-              <div className="flex flex-col gap-3">
-                <Checkbox value="kid">Kid-Friendly</Checkbox>
-                <Checkbox value="quick">
-                  Quick & Easy (No Weekend Prep)
-                </Checkbox>
-              </div>
-            </Form.Item>
-
-            <Upload
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-              listType="picture-card"
-              fileList={fileList}
-              onChange={onChange}
-              onPreview={onPreview}
-            >
-              {fileList.length < 5 && "+ Upload"}
-            </Upload>
-          </div>
-        </div>
-
-        <Form.Item>
-          <div className="flex justify-center gap-5 mt-11">
-          <button className="bg-[#495F48] px-16 py-3 text-white rounded" type="submit" htmlType="submit">
-            Create
-          </button>
-          <button className="bg-[red] px-16 py-3 text-white rounded" >
-            Cancel
-          </button>
-          </div>
-        </Form.Item>
-      </Form>
-    </div>
+                Cancel
+              </button>
+            </div>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
   );
 };

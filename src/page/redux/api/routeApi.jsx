@@ -86,6 +86,26 @@ const route = baseApi.injectEndpoints({
         },
         invalidatesTags: ["updateProfile"],
       }),
+
+      getRecipe: builder.query({
+        query: ({searchTerm, page,limit}) => {
+          return {
+            url: `/dashboard/get_all_recipe?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
+            method: "GET",
+          };
+        },
+        providesTags: ["updateProfile"],
+      }),
+
+      getRecipeDetails: builder.query({
+        query: ({id}) => {
+          return {
+            url: `/dashboard/get_recipe_details/${id}`,
+            method: "GET",
+          };
+        },
+        providesTags: ["updateProfile"],
+      }),
       
     updateSubscription: builder.mutation({
         query: ({data,id}) => {
@@ -98,8 +118,27 @@ const route = baseApi.injectEndpoints({
         invalidatesTags: ["updateProfile"],
       }),
 
+      updateRecipe: builder.mutation({
+        query: ({data,id}) => {
+          return {
+            url: `/dashboard/update_recipe/${id}`,
+            method: "PATCH",
+            body: data,
+          };
+        },
+        invalidatesTags: ["updateProfile"],
+      }),
 
-    
+
+      deleteRecipe :  builder.mutation({
+        query : (id)=>{
+            return {
+                url : `/dashboard/delete_recipe/${id}`,
+                method : 'DELETE'
+            }
+        },
+        invalidatesTags :['updateProfile']
+    }),
     
   }),
 });
@@ -114,7 +153,11 @@ export const {
   useGetDashboardCountQuery,
   useGetUserGrowthQuery,
  useGetGrowthQuery,
- useAddRecipeMutation
+ useAddRecipeMutation,
+ useGetRecipeQuery,
+ useDeleteRecipeMutation,
+ useGetRecipeDetailsQuery,
+ useUpdateRecipeMutation
 
  
 } = route;
