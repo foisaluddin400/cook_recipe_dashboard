@@ -1,21 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Checkbox, Form, Input, message } from "antd";
+import { Button, Checkbox, Form, Input, message, Spin } from "antd";
 import { useForgotPasswordMutation } from "../page/redux/api/userApi";
+import { useState } from "react";
 
 const ForgetPass = () => {
   const navigate = useNavigate()
   const[forgotPassword] = useForgotPasswordMutation();
+  const [loading, setLoading] = useState(false);
   const onFinish = async (values) => {
    
-
+    setLoading(true);
     forgotPassword(values)
       .unwrap()
       .then((payload) => {
         message.success("check Your Email");
         navigate("/verify");
         localStorage.setItem("email", values?.email);
+        setLoading(false);
       })
       .catch((error) => message.error(error?.data?.message));
+      setLoading(false);
   };
 
   return (
@@ -64,8 +68,13 @@ const ForgetPass = () => {
                     type="primary"
                     htmlType="submit"
                     className="w-full py-2 mt-6 bg-[#495F48] text-white rounded  focus:ring-2 focus:ring-gray-500"
+                    disabled={loading}
                   >
-                    Submit
+                      {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Update"
+              )}
                   </button>
               
               </Form.Item>

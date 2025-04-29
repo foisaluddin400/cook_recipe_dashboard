@@ -3,11 +3,12 @@ import OTPInput from "react-otp-input";
 
 import { Link, useNavigate } from "react-router-dom";
 import { useResentVerifyOtpMutation, useVerifyOtpMutation } from "../page/redux/api/userApi";
-import { message } from "antd";
+import { message, Spin } from "antd";
 
 const Verify = () => {
   const [verifyOtp] = useVerifyOtpMutation();
   const [resendVerifyOtp] = useResentVerifyOtpMutation();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
   const [otp, setOtp] = useState("");
 
@@ -16,14 +17,16 @@ const Verify = () => {
       code: otp,
       email: localStorage.getItem("email"),
     };
+    setLoading(true);
     try {
       const response = await verifyOtp(data).unwrap();
-    
+      setLoading(false);
       message.success(response?.message);
       navigate("/reset");
     } catch (error) {
       console.error(error); 
       message.error(error?.data?.message );
+      setLoading(false);
     }
   };
 
@@ -82,8 +85,13 @@ const Verify = () => {
               <span
                 onClick={handleResend}
                 className="text-[#495F48] cursor-pointer pl-2"
+                disabled={loading}
               >
-                 Resend
+                   {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Verify"
+              )}
               </span>
             </span>
           </div>

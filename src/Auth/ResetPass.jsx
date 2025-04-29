@@ -1,11 +1,13 @@
-import { Checkbox, Form, Input, message } from "antd";
+import { Checkbox, Form, Input, message, Spin } from "antd";
 import { useResetPasswordMutation } from "../page/redux/api/userApi";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const ResetPass = () => {
 
 const[resetPassword] = useResetPasswordMutation()
 const navigate = useNavigate()
+const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
  
@@ -15,14 +17,15 @@ const navigate = useNavigate()
       newPassword: values?.password,
       confirmPassword: values?.confirmPassword,
     };
-
+    setLoading(true);
     try {
       const result = await resetPassword({ data, email:email }).unwrap();
-
+      setLoading(false);
       message.success(result?.message);
       navigate("/login");
     } catch (error) {
       message.error(error?.data?.message || "Error resetting password.");
+      setLoading(false);
     }
   };
   return (
@@ -90,8 +93,13 @@ const navigate = useNavigate()
                 <button
                   type="submit"
                   className="w-full py-2 bg-[#495F48] text-white rounded-md"
+                  disabled={loading}
                 >
-                  Reset
+                    {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Reset"
+              )}
                 </button>
               </Form.Item>
             </Form>

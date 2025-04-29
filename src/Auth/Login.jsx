@@ -1,27 +1,31 @@
 
-import { Checkbox, Form, Input, message } from "antd";
+import { Checkbox, Form, Input, message, Spin } from "antd";
 
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginAdminMutation } from "../page/redux/api/userApi";
 import { useDispatch } from "react-redux";
 import { setToken } from "../page/redux/features/auth/authSlice";
+import { useState } from "react";
 const Login = () => {
   const [loginAdmin] = useLoginAdminMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const onFinish = async (values) => {
-  
+    setLoading(true);
     try {
      
       const payload = await loginAdmin(values).unwrap();
-     
+      setLoading(false);
       if (payload) {
       
         dispatch(setToken(payload?.data?.accessToken))
         message.success(payload?.message);
+        setLoading(false);
         navigate("/");
       }
     } catch (error) {
+      setLoading(false);
       console.error("Login error:", error);
       message.error(error?.data?.message || "Something went wrong. Try again!");
     } 
@@ -102,8 +106,13 @@ const Login = () => {
               <button
                 type="submit"
                 className="w-full mt-8 py-2 bg-[#495F48] text-white rounded hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
+                disabled={loading}
               >
-                Submit
+                  {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Submit"
+              )}
               </button>
             </Form.Item>
           </Form>
