@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Button, message } from 'antd';
+import { Form, Input, Modal, Button, message, Spin } from 'antd';
 import React, { useState } from 'react';
 import { GoPlus } from 'react-icons/go';
 import { IoArrowBackSharp } from 'react-icons/io5';
@@ -13,6 +13,7 @@ const FAQ = () => {
   const { data: faqData = [] } = useGetFaqQuery(); 
   const [deleteFaq] = useDeleteFaqMutation();
   const [updateFaq] = useUpdateFaqMutation();
+  const [loading, setLoading] = useState(false);
   // const [faqData, setFaqData] = useState([
   //   { _id: 1, question: "What is React?", answer: "React is a JavaScript library for building user interfaces." },
   //   { _id: 2, question: "What is JSX?", answer: "JSX is a syntax extension for JavaScript recommended by React." }
@@ -32,18 +33,22 @@ const FAQ = () => {
   };
 
   const handleSubmit = async (values) => {
+    setLoading(true);
     try {
       const res= await addFaq(values).unwrap();
-    
+      setLoading(false);
       message.success(res?.message);
       setIsModalOpen(false);
       form.resetFields();
+      setLoading(false);
     } catch (error) {
       message.error(` ${error?.data?.message}`);
+      setLoading(false);
     } 
   };
 
   const handleUpdateFaq = async () => {
+    setLoading(true);
     
     try {
      
@@ -55,21 +60,26 @@ const FAQ = () => {
       
   
       await updateFaq({data,id}).unwrap();
+      setLoading(false);
       message.success('FAQ updated successfully!');
       setIsEditModalOpen(false);
       form.resetFields();
+
     } catch (error) {
       message.error(`Error updating FAQ: ${error.message || error}`);
+      setLoading(false);
     }
   };
 
   const handleDeleteFaq = async (id) => {
-    
+    setLoading(true);
     try {
       const res = await deleteFaq( id ).unwrap(); // send { id: "..." }
       message.success(res?.message);
+      setLoading(false);
     } catch (error) {
       message.error(error?.data?.message || 'Error deleting FAQ');
+      setLoading(false);
     }
   };
   
@@ -115,8 +125,12 @@ const FAQ = () => {
     </Form.Item>
     <Form.Item>
       <div className="flex items-center justify-center mt-2">
-        <Button type="primary" shape="round" size="large" htmlType="submit" style={{ background: "black", borderColor: "#495F48" }}>
-          Save
+        <Button type="primary" shape="round" size="large" htmlType="submit" style={{ background: "black", borderColor: "#495F48" }} disabled={loading}>
+        {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Add"
+              )}
         </Button>
       </div>
     </Form.Item>
@@ -135,8 +149,12 @@ const FAQ = () => {
     </Form.Item>
     <Form.Item>
       <div className="flex items-center justify-center mt-2">
-        <Button type="primary" shape="round" size="large" onClick={handleUpdateFaq} style={{ background: "black", borderColor: "#495F48" }}>
-          Update
+        <Button type="primary" shape="round" size="large" onClick={handleUpdateFaq} style={{ background: "black", borderColor: "#495F48" }} disabled={loading}>
+        {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Update"
+              )}
         </Button>
       </div>
     </Form.Item>

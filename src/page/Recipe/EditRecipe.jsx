@@ -8,6 +8,7 @@ import {
   Radio,
   Select,
   Space,
+  Spin,
   Upload,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -30,7 +31,7 @@ const EditRecipe = () => {
   console.log(recipe);
   const [updateRecipe] = useUpdateRecipeMutation();
   const [form] = Form.useForm();
-
+  const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -144,19 +145,19 @@ const EditRecipe = () => {
     for (let [key, value] of formData.entries()) {
       console.log(key, value);
     }
-    // setLoading(true);
+    setLoading(true);
 
     try {
       const res = await updateRecipe({ data: formData, id }).unwrap();
 
-      // setLoading(false);
+      setLoading(false);
       message.success(res?.message);
       // setOpenAddModal(false);
-      // setLoading(false);
+      setLoading(false);
       form.resetFields();
     } catch (error) {
       message.error(` ${error?.data?.message}`);
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -446,8 +447,13 @@ const EditRecipe = () => {
               <button
                 className="bg-[#495F48] px-16 py-3 text-white rounded"
                 type="submit"
+                disabled={loading}
               >
-                Create
+                  {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Update"
+              )}
               </button>
               <button
                 className="bg-red-500 px-16 py-3 text-white rounded"

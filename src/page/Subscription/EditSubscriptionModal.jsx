@@ -1,4 +1,4 @@
-import { Form, Input, message, Modal, Select } from 'antd';
+import { Form, Input, message, Modal, Select, Spin } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useUpdateSubscriptionMutation } from '../redux/api/routeApi';
 
@@ -7,6 +7,7 @@ export const EditSubscriptionModal = ({editModal,
     }) => {
      
       const [updateSub] = useUpdateSubscriptionMutation();
+      const [loading, setLoading] = useState(false);
       const [form] = Form.useForm();
       useEffect(() => {
         if (selectedSubCategory) {
@@ -34,14 +35,18 @@ export const EditSubscriptionModal = ({editModal,
           fee: values.price,
           description: values.descriptions,
         };
+        setLoading(true);
         try {
           const response = await updateSub({data,id}).unwrap();
+          setLoading(false);
           if (response) {
             message.success(response?.message);
             setEditModal(false)
+            setLoading(false);
           }
         } catch (error) {
           message.error(error?.data?.message);
+          setLoading(false);
         }
       };
   return (
@@ -107,10 +112,14 @@ export const EditSubscriptionModal = ({editModal,
           <button
               type="submit"
               className="px-4 py-3 w-full bg-[#495F48] text-white rounded-md"
-             
+              disabled={loading}
             >
               
-                Add
+              {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Update"
+              )}
             
             </button>
           <button

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Avatar, Upload, Form, Input, Button, message } from "antd";
+import { Avatar, Upload, Form, Input, Button, message, Spin } from "antd";
 import { IoCameraOutline } from "react-icons/io5";
 import { PasswordTab } from "./PasswordTab";
 import Navigate from "../../Navigate";
@@ -13,6 +13,7 @@ const Profile = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [updateProfile] = useUpdateProfileMutation()
   const {data:adminProfile} = useGetProfileQuery()
+  const [loading, setLoading] = useState(false);
 console.log(adminProfile)
   const [activeTab, setActiveTab] = useState("1");
 
@@ -44,11 +45,14 @@ console.log(adminProfile)
     data.append("name", values.name);
     data.append("address", values.address);
     data.append("phone_number", values.phone_number);
+    setLoading(true);
      try {
          const response = await updateProfile(data).unwrap(); 
+         setLoading(false);
          message.success(response?.message);
        } catch (error) {
          message.error(error?.data?.message );
+         setLoading(false);
        }
    
   };
@@ -105,8 +109,12 @@ console.log(adminProfile)
 
           <Form.Item>
            <div className="flex justify-center">
-           <button className="bg-[#495F48] text-white py-2 px-5" type="submit" htmlType="submit" block>
-              Save Changes
+           <button className="bg-[#495F48] text-white py-2 px-5" type="submit" htmlType="submit" block disabled={loading}>
+           {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Update"
+              )}
             </button>
            </div>
           </Form.Item>

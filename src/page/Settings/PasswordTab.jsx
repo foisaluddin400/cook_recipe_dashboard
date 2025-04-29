@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, message, Spin } from "antd";
 import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ export const PasswordTab = () => {
 
   const [passError, setPassError] = useState("");
   const [updatePassword] = useChangePasswordMutation();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); 
   const dispatch = useDispatch();
   const handlePasswordChange = async (values) => {
@@ -31,14 +32,15 @@ export const PasswordTab = () => {
       newPassword: values.newPassword,
       confirmPassword: values.confirmPassword
     };
-
-
+    setLoading(true);
     try {
       const response = await updatePassword(data).unwrap(); 
       message.success(response?.message);
+      setLoading(false);
       dispatch(logout());
     } catch (error) {
       message.error(error?.data?.message || "Failed to update password.");
+      setLoading(false);
     }
   };
 
@@ -95,8 +97,12 @@ export const PasswordTab = () => {
 
       <Form.Item>
       <div className="flex justify-center">
-           <button className="bg-[#495F48] text-white py-2 px-5" type="submit" htmlType="submit" block>
-              Update
+           <button className="bg-[#495F48] text-white py-2 px-5" type="submit" htmlType="submit" block disabled={loading}>
+           {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Update"
+              )}
             </button>
            </div>
       </Form.Item>

@@ -4,7 +4,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import  Navigate  from '../../Navigate';
 
-import { message } from 'antd';
+import { message, Spin } from 'antd';
 import { useAddPrivacyMutation, useGetPrivacyQuery } from '../redux/api/settingApi';
 
 
@@ -63,10 +63,14 @@ const[addTerms] = useAddPrivacyMutation()
       <div className="mt-5 flex justify-center">
         <button
        onClick={handleTerms}
-       loading={isLoading}
-          className="bg-[#02111E] py-2 px-4 rounded text-white"
+       disabled={isLoading}
+          className="bg-[#495F48] py-2 px-4 rounded text-white"
         >
-          Save & change
+            {isLoading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Update"
+              )}
         </button>
       </div>
     </div>

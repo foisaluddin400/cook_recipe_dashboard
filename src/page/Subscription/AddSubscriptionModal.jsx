@@ -1,9 +1,10 @@
-import { Form, Input, message, Modal, Select } from "antd";
+import { Form, Input, message, Modal, Select, Spin } from "antd";
 import React, { useState } from "react";
 import { useAddSubscriptionMutation } from "../redux/api/routeApi";
 
 export const AddSubscriptionModal = ({ openAddModal, setOpenAddModal }) => {
   const [addSubscription] = useAddSubscriptionMutation();
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const handleCancel = () => {
     form.resetFields();
@@ -19,14 +20,19 @@ export const AddSubscriptionModal = ({ openAddModal, setOpenAddModal }) => {
       fee: values.price,
       description: values.descriptions,
     };
+    setLoading(true);
+    
     try {
       const response = await addSubscription(data).unwrap();
+      setLoading(false);
       if (response) {
         message.success(response?.message);
         setOpenAddModal(false)
+        setLoading(false);
       }
     } catch (error) {
       message.error(error?.data?.message);
+      setLoading(false);
     }
     
   };
@@ -95,8 +101,13 @@ export const AddSubscriptionModal = ({ openAddModal, setOpenAddModal }) => {
             <button
               type="submit"
               className="px-4 py-3 w-full bg-[#495F48] text-white rounded-md"
+              disabled={loading}
             >
-              Add
+                {loading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Add"
+              )}
             </button>
             <button
               type="button"

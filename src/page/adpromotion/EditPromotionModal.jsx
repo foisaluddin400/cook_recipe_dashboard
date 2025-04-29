@@ -139,7 +139,7 @@ const EditPromotionModal = ({ editModal, setEditModal, selectedAdd }) => {
             disabled={loading}
             className="w-full py-2 mt-2 bg-[#495F48] text-white rounded-md"
           >
-            {loading ? <Spin size="small" /> : "Add"}
+            {loading ? <Spin size="small" /> : "Update"}
           </button>
         </Form>
         </div>
