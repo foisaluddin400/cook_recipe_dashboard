@@ -1,4 +1,4 @@
-import { Table, Switch, Tag, Input, Button, Dropdown, Space } from "antd";
+import { Table, Switch, Tag, Input, Button, Dropdown, Space, message } from "antd";
 import {
   SearchOutlined,
   FilterOutlined,
@@ -13,7 +13,7 @@ import { useState } from "react";
 import { AddSubscriptionModal } from "./AddSubscriptionModal";
 import { EditSubscriptionModal } from "./EditSubscriptionModal";
 import Navigate from "../../Navigate";
-import { useGetSubscriptionQuery } from "../redux/api/routeApi";
+import { useDeleteSubMutation, useGetSubscriptionQuery } from "../redux/api/routeApi";
 import { Description } from "@headlessui/react";
 
 const Subscription = () => {
@@ -26,6 +26,18 @@ const Subscription = () => {
     setSelectedSubCategory(record);
     setEditModal(true);
   };
+  const [deleteSub] = useDeleteSubMutation()
+ const handleDeleteCategory = async (id) => {
+  
+    try {
+      const res = await deleteSub( id ).unwrap(); 
+      message.success(res?.message);
+    } catch (error) {
+      message.error(error?.data?.message || 'Error deleting FAQ');
+    }
+  };
+
+
   const columns = [
     {
       title: "Sl",
@@ -57,13 +69,20 @@ const Subscription = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <div>
+        <div className="flex gap-2">
           <button
            onClick={() => handleEdit(record)}
             shape="circle"
             className="  rounded text-[#495F48]"
           >
             Edit
+          </button>
+          <button
+           onClick={() => handleDeleteCategory(record?.key)}
+            shape="circle"
+            className="  rounded text-red-500"
+          >
+            Delete
           </button>
         </div>
       ),

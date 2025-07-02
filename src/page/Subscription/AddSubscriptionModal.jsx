@@ -78,7 +78,8 @@ export const AddSubscriptionModal = ({ openAddModal, setOpenAddModal }) => {
               
               options={[
                 { value: "Monthly", label: "Monthly" },
-                { value: "Weekly", label: "Weekly" },
+                { value: "Yearly", label: "Yearly" },
+                { value: "Free", label: "Free" },
               ]}
             />
           </Form.Item>

@@ -88,7 +88,8 @@ export const EditSubscriptionModal = ({editModal,
               optionFilterProp="label"
               options={[
                 { value: "Monthly", label: "Monthly" },
-                { value: "Weekly", label: "Weekly" },
+                 { value: "Yearly", label: "Yearly" },
+                { value: "Free", label: "Free" },
                
               ]}
             />
