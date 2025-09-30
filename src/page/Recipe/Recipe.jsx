@@ -18,7 +18,7 @@ const Recipe = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const { data: recipe } = useGetRecipeQuery({
-    searchTerm, 
+    searchTerm,
     page: currentPage,
     limit: pageSize,
   });
@@ -79,20 +79,19 @@ const Recipe = () => {
   ];
 
   return (
-    <div className="h-screen p-1">
+    <div className="bg-white p-3 h-[87vh] overflow-auto ">
       <div className="flex justify-between">
-
-          <Navigate title={"Recipe"}></Navigate>
-          <Input
-            placeholder="Search here..."
-            prefix={<SearchOutlined />}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ marginBottom: "16px", maxWidth: "300px" }}
-          />
-       
-        
-      </div>
-      <div>
+        <Navigate title={"Recipe"}></Navigate>
+       <div className="flex gap-4">
+        <div>
+           <Input
+          placeholder="Search here..."
+          prefix={<SearchOutlined />}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ maxWidth: "500px", height: "40px" }}
+        />
+        </div>
+        <div className="">
           <Link to={"/dashboard/recipe/addRecipe"}>
             <button
               className="bg-[#495F48] px-5 py-2 text-white rounded"
@@ -102,21 +101,28 @@ const Recipe = () => {
             </button>
           </Link>
         </div>
+       </div>
+      </div>
+
       <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {recipe?.data?.result?.map((item, index) => (
           <div
             key={index}
             className={`flex w-full max-w-sm bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 border-l-4 ${item.borderColor}`}
           >
-            <Link to={`/dashboard/recipe/recipeDetails/${item?._id}`}><img
-              src={`${imageUrl}/${item?.image}`}
-              alt={item.name}
-              className="w-[150px] h-[130px] object-cover"
-            /></Link>
+            <Link to={`/dashboard/recipe/recipeDetails/${item?._id}`}>
+              <img
+                src={`${imageUrl}/${item?.image}`}
+                alt={item.name}
+                className="w-[150px] h-[130px] object-cover"
+              />
+            </Link>
             <div className="flex flex-col justify-between p-4 w-2/3">
               <div>
                 <p className="text-sm text-gray-500">{item.category}</p>
-                <Link to={`/dashboard/recipe/recipeDetails/${item?._id}`}><h2 className="font-semibold">{item.name}</h2></Link>
+                <Link to={`/dashboard/recipe/recipeDetails/${item?._id}`}>
+                  <h2 className="font-semibold">{item.name}</h2>
+                </Link>
               </div>
               <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
                 <div className="flex items-center gap-1">

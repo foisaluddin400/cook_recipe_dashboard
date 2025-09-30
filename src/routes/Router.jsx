@@ -25,6 +25,9 @@ import AddRecipe from "../page/Recipe/AddRecipe";
 import EditRecipe from "../page/Recipe/EditRecipe";
 import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 import RecipeDetailsPage from "../page/Recipe/RecipeDetailsPage";
+import HelpAndSupport from "../page/Settings/HelpAndSupport";
+import AboutUs from "../page/Settings/AboutUs";
+import Subscribe from "../page/subscribe/Subscribe";
 
 
 export const router = createBrowserRouter([
@@ -80,6 +83,11 @@ export const router = createBrowserRouter([
         path: "/dashboard/Subscription",
         element: <Subscription></Subscription>,
       },
+
+        {
+        path: "/dashboard/Subscribe",
+        element: <Subscribe></Subscribe>
+      },
       {
         path: "/dashboard/Settings/profile",
         element: <Profile></Profile>,
@@ -104,6 +112,16 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/Settings/PrivacyPolicy",
         element: <PrivacyPolicy></PrivacyPolicy>,
+      },
+
+      {
+        path: "/dashboard/Settings/help&Support",
+        element: <HelpAndSupport></HelpAndSupport>
+      },
+
+      {
+        path: "/dashboard/Settings/aboutUs",
+        element: <AboutUs></AboutUs>
       },
     ],
   },

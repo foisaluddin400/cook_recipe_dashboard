@@ -91,6 +91,66 @@ const setting = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
+
+   addAboutUs: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/dashboard/addupdate-about",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    getAboutUs: builder.query({
+      query: () => {
+        return {
+          url: `/dashboard/get-about`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+
+
+       addHelpSupport: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/dashboard/addupdate-help",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    getHelpSupport: builder.query({
+      query: () => {
+        return {
+          url: `/dashboard/get-help`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+
+ getSubscribe: builder.query({
+      query: ({page,limit}) => {
+        return {
+          url: `/dashboard/get-subscribe-mail?page=${page}&limit=${limit}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+
+
+
+
     getAllAdd: builder.query({
       query: ({page,limit}) => {
         return {
@@ -150,5 +210,6 @@ export const {
  useGetAllAddQuery,
  useAddAddMutation,
  useDeleteAddMutation,
- useUpdateAddMutation
+ useUpdateAddMutation,
+ useGetAboutUsQuery,useAddAboutUsMutation,useAddHelpSupportMutation,useGetHelpSupportQuery,useGetSubscribeQuery
 } = setting;

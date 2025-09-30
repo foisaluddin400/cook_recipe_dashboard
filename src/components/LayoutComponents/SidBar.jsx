@@ -53,6 +53,12 @@ const items = [
     link: "/dashboard/transaction",
   },
   {
+    key: "subscribe",
+    label: "Subscribe",
+    icon: <SlSupport />,
+    link: "/dashboard/Subscribe",
+  },
+  {
     key: "support",
     label: "Contact Support",
     icon: <SlSupport />,
@@ -78,6 +84,18 @@ const items = [
         key: "privacy",
         label: "Privacy Policy",
         link: "/dashboard/Settings/PrivacyPolicy",
+      },
+
+      {
+        key: "aboutUs",
+        label: "About Us",
+        link: "/dashboard/Settings/aboutUs",
+      },
+
+      {
+        key: "helpSupport",
+        label: "Help & Support",
+        link: "/dashboard/Settings/help&Support",
       },
       {
         key: "faq",

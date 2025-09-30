@@ -5,17 +5,23 @@ import { useState } from "react";
 import { LiaReplySolid } from "react-icons/lia";
 import Navigate from "../../Navigate";
 import { FaRegEye } from "react-icons/fa";
-import { useBlockUserMutation, useGetAdminAllUserQuery } from "../redux/api/userApi";
+import {
+  useBlockUserMutation,
+  useGetAdminAllUserQuery,
+} from "../redux/api/userApi";
 
 const UserManagement = () => {
   const [loadingId, setLoadingId] = useState(null);
   const [searchTerm, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-  const { data: userManagement, isLoading } = useGetAdminAllUserQuery({searchTerm, page: currentPage,
-    limit: pageSize,});
+  const { data: userManagement, isLoading } = useGetAdminAllUserQuery({
+    searchTerm,
+    page: currentPage,
+    limit: pageSize,
+  });
 
-  const[blockUser] = useBlockUserMutation()
+  const [blockUser] = useBlockUserMutation();
   const [selectedShop, setSelectedShop] = useState(null);
   const [open, setOpen] = useState(false);
   // Static mock data (replace this with actual data if needed)
@@ -27,27 +33,27 @@ const UserManagement = () => {
       userName: user?.name,
       email: user?.email,
       contactNumber: user?.phone_number,
-      isBlock:user?.authId?.is_block,
+      isBlock: user?.authId?.is_block,
       address: `${user?.shipping_address?.street_address}, ${user?.shipping_address?.city}, ${user?.shipping_address?.state}, ${user?.shipping_address?.zip_code}`,
       status: user?.status,
     })) || [];
 
-    const handleBlockUnblock = async (record) => {
-      console.log(record)
-     const data = {
-        email:record.email,
-        role:'USER',
-        is_block: !record.isBlock,
-      }
-
-      console.log(data)
-      try {
-           const res = await blockUser(data).unwrap(); 
-           message.success(res?.message);
-         } catch (error) {
-           message.error(error?.data?.message || 'Error deleting FAQ');
-         }
+  const handleBlockUnblock = async (record) => {
+    console.log(record);
+    const data = {
+      email: record.email,
+      role: "USER",
+      is_block: !record.isBlock,
     };
+
+    console.log(data);
+    try {
+      const res = await blockUser(data).unwrap();
+      message.success(res?.message);
+    } catch (error) {
+      message.error(error?.data?.message || "Error deleting FAQ");
+    }
+  };
 
   const columns = [
     { title: "SL no.", dataIndex: "sl", width: 70, align: "center" },
@@ -72,7 +78,7 @@ const UserManagement = () => {
           >
             <FaRegEye />
           </button>
-         
+
           <button
             onClick={() => handleBlockUnblock(record)}
             className={`${
@@ -95,31 +101,35 @@ const UserManagement = () => {
     setCurrentPage(page);
   };
 
-
   return (
-    <div className="h-screen  p-1">
+    <div className="bg-white p-3 h-[87vh] overflow-auto ">
       <div className="flex justify-between">
         <Navigate title={"User Managements"} />
         <Input
           placeholder="Search here..."
           prefix={<SearchOutlined />}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ marginBottom: "16px", maxWidth: "300px" }}
+          style={{ marginBottom: "16px", maxWidth: "300px", height: "40px" }}
         />
       </div>
 
-      <Table columns={columns} dataSource={userData} pagination={false} />
+      <Table
+        columns={columns}
+        dataSource={userData}
+        pagination={false}
+        scroll={{ x: "max-content" }}
+        className="custom-table "
+      />
 
       <div className="mt-4 flex justify-center">
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={userManagement?.data?.meta?.total || 0}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-            
-          />
-        </div>
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={userManagement?.data?.meta?.total || 0}
+          onChange={handlePageChange}
+          showSizeChanger={false}
+        />
+      </div>
 
       <Modal
         title="Shop Details"
